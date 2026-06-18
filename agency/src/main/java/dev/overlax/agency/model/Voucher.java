@@ -1,58 +1,39 @@
 package dev.overlax.agency.model;
 
+import dev.overlax.agency.model.type.VoucherStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Generated;
+import org.hibernate.generator.EventType;
 
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.UUID;
 
+@Entity
+@Table(name = "voucher")
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-@Table(name = "\"voucher\"")
 public class Voucher {
 
     @Id
+    @Column(name = "id")
+    @Generated(event = EventType.INSERT)
     private UUID id;
 
-    @Column(name = "title")
-    private String title;
+    @Column(nullable = false, unique = true, length = 36)
+    private String code;
 
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "price")
-    private Double price;
-
-    @Column(name = "tourType")
     @Enumerated(EnumType.STRING)
-    private TourType tourType;
-
-    @Column(name = "transferType")
-    @Enumerated(EnumType.STRING)
-    private TransferType transferType;
-
-    @Column(name = "hotelType")
-    @Enumerated(EnumType.STRING)
-    private HotelType hotelType;
-
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
     private VoucherStatus status;
 
-    @Column(name = "arrivalDate")
-    private LocalDate arrivalDate;
+    @Column(name = "issued_at", nullable = false)
+    private Instant issuedAt;
 
-    @Column(name = "evictionDate")
-    private LocalDate evictionDate;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @Column(name = "is_hot")
-    private boolean isHot;
+    @OneToOne(optional = false)
+    @JoinColumn(name = "order_item_id", unique = true)
+    private OrderItem orderItem;
 }
