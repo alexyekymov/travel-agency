@@ -1,0 +1,26 @@
+services:
+
+  app:
+    image: alexyekymov/travel-agency:${APP_VERSION:-latest}
+    restart: unless-stopped
+    networks:
+      - travel-agency-net
+    depends_on:
+      - postgres
+#    env_file:
+#      - .env
+    ports:
+      - '8020:8080'
+
+  postgres:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: agency
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: travel-agency
+    networks:
+      - travel-agency-net
+
+networks:
+  travel-agency-net:
+    name: travel-agency-net

@@ -6,9 +6,9 @@ spring:
     name: agency
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/travel-agency
+    url: jdbc:postgresql://postgres:5432/travel-agency
     driver-class-name: org.postgresql.Driver
-    username: user
+    username: agency
     password: password
 
   data:
