@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
+//@Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface VoucherMapper {
     Voucher toVoucher(VoucherDTO voucherDTO);
 
