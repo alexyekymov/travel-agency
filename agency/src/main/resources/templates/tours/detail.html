@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${tour.title}">Tour</title>
+</head>
+<body>
+
+<h1 th:text="${tour.title}">Title</h1>
+<img th:if="${tour.imageName}" th:src="@{'/images/' + ${tour.imageName}}" alt="tour image">
+<p th:text="${tour.description}">Description</p>
+<p th:text="${tour.price}">Price</p>
+<p th:text="${tour.transferType}">Transfer type</p>
+
+</body>
+</html>

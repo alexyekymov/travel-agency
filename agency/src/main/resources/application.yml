@@ -6,15 +6,18 @@ spring:
     name: agency
 
   datasource:
-    url: jdbc:postgresql://postgres:5432/travel-agency
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/travel-agency}
     driver-class-name: org.postgresql.Driver
-    username: agency
-    password: password
+    username: ${DB_USERNAME:user}
+    password: ${DB_PASSWORD:password}
 
   data:
     web:
       pageable:
         default-page-size: 40
+
+app:
+  upload-dir: ${APP_UPLOAD_DIR:${user.home}/travel-agency-uploads}
 
 #spring.jpa.show-sql=false
 

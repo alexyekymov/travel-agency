@@ -1,25 +1,48 @@
 package dev.overlax.agency.service;
 
-import dev.overlax.agency.dto.TourDto;
+import dev.overlax.agency.dto.TourRequest;
+import dev.overlax.agency.dto.TourResponse;
 import dev.overlax.agency.mapper.TourMapper;
 import dev.overlax.agency.model.Tour;
 import dev.overlax.agency.repository.TourRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class TourService {
 
     private final TourRepository tourRepository;
     private final TourMapper tourMapper;
+    private final ImageStorageService imageStorageService;
 
-    public List<TourDto> findAll(Pageable pageable) {
-        Page<Tour> tours = tourRepository.findAll(pageable);
-        return tourMapper.toDtoList(tours.toList());
+    public List<TourResponse> findAll(Pageable pageable) {
+        Page<Tour> tourPage = tourRepository.findAll(pageable);
+        return tourMapper.toDtoList(tourPage.toList());
+    }
+
+    public TourResponse findById(UUID id) {
+        log.debug("Finding tour by id: {}", id);
+        TourResponse tour = tourRepository.findById(id)
+                .map(tourMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException("Tour not found: " + id));
+        log.info("Tour found: {}", id);
+        return tour;
+    }
+
+    public TourResponse create(TourRequest request) {
+        Tour tour = tourMapper.toEntity(request);
+        tour.setImageName(imageStorageService.save(request.image()));
+        Tour saved = tourRepository.save(tour);
+        log.info("Tour created: {}", saved.getId());
+        return tourMapper.toDto(saved);
     }
 }

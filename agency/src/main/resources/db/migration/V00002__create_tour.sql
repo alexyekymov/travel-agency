@@ -3,6 +3,7 @@ CREATE TABLE tour
     id              UUID PRIMARY KEY        DEFAULT uuidv7(),
     title           VARCHAR(150)   NOT NULL,
     description     TEXT,
+    image_name      VARCHAR(255),
     price           DECIMAL(10, 2) NOT NULL CHECK (price >= 0),
     arrival_date    DATE           NOT NULL,
     eviction_date   DATE           NOT NULL,

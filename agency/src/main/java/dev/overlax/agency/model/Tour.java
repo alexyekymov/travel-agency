@@ -33,6 +33,9 @@ public class Tour {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "image_name")
+    private String imageName;
+
     @Column(name = "price")
     private BigDecimal price;
 
@@ -61,6 +64,7 @@ public class Tour {
     private boolean hot;
 
     @Column(name = "created_at")
+    @Generated(event = EventType.INSERT)
     private LocalDateTime createdAt;
 
     @ManyToOne
