@@ -5,3 +5,7 @@ services:
     build:
       context: .
       dockerfile: agency/Dockerfile
+    restart: no
+
+  postgres:
+    restart: no

@@ -14,6 +14,7 @@ services:
 
   postgres:
     image: postgres:18-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_USER: agency
       POSTGRES_PASSWORD: password
