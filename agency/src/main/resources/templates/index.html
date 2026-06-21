@@ -50,30 +50,7 @@
                     No tours available yet.
                 </div>
 
-                <nav th:if="${tours.totalPages > 1}" aria-label="Tours pagination" class="mt-5">
-                    <ul class="pagination pagination-sm gap-1 justify-content-center"
-                        style="--bs-pagination-color: var(--bs-success);
-                               --bs-pagination-hover-color: var(--bs-success);
-                               --bs-pagination-active-bg: var(--bs-success);
-                               --bs-pagination-active-border-color: var(--bs-success)">
-
-                        <li class="page-item" th:if="${tours.hasPrevious()}">
-                            <a class="page-link rounded border-0" th:href="@{/(page=${tours.number - 1})}" aria-label="Previous">&laquo;</a>
-                        </li>
-
-                        <li class="page-item"
-                            th:each="i : ${#numbers.sequence(0, tours.totalPages - 1)}"
-                            th:classappend="${i == tours.number} ? 'active'"
-                            th:attr="aria-current=${i == tours.number} ? 'page' : null">
-                            <a class="page-link rounded border-0" th:href="@{/(page=${i})}" th:text="${i + 1}">1</a>
-                        </li>
-
-                        <li class="page-item" th:if="${tours.hasNext()}">
-                            <a class="page-link rounded border-0" th:href="@{/(page=${tours.number + 1})}" aria-label="Next">&raquo;</a>
-                        </li>
-
-                    </ul>
-                </nav>
+                <div th:replace="~{fragments/pagination :: pagination(${tours}, '/')}"></div>
 
             </div>
         </div>
