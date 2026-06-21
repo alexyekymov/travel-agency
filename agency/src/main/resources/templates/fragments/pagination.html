@@ -14,18 +14,19 @@
         th:with="current=${page.number},
                  total=${page.totalPages},
                  start=${T(java.lang.Math).max(0, page.number - 2)},
-                 end=${T(java.lang.Math).min(page.totalPages - 1, page.number + 2)}"
+                 end=${T(java.lang.Math).min(page.totalPages - 1, page.number + 2)},
+                 sort=${param.sort != null ? param.sort[0] : null}"
         style="--bs-pagination-color: var(--bs-success);
                --bs-pagination-hover-color: var(--bs-success);
                --bs-pagination-active-bg: var(--bs-success);
                --bs-pagination-active-border-color: var(--bs-success)">
 
         <li class="page-item" th:if="${page.hasPrevious()}">
-            <a class="page-link rounded border-0" th:href="@{${url}(page=${current - 1})}" aria-label="Previous">&laquo;</a>
+            <a class="page-link rounded border-0" th:href="@{${url}(page=${current - 1}, sort=${sort})}" aria-label="Previous">&laquo;</a>
         </li>
 
         <li class="page-item" th:if="${start > 0}">
-            <a class="page-link rounded border-0" th:href="@{${url}(page=0)}" th:text="1">1</a>
+            <a class="page-link rounded border-0" th:href="@{${url}(page=0, sort=${sort})}" th:text="1">1</a>
         </li>
         <li class="page-item disabled" th:if="${start > 1}">
             <span class="page-link border-0 bg-transparent">&hellip;</span>
@@ -35,18 +36,18 @@
             th:each="i : ${#numbers.sequence(start, end)}"
             th:classappend="${i == current} ? 'active'"
             th:attr="aria-current=${i == current} ? 'page' : null">
-            <a class="page-link rounded border-0" th:href="@{${url}(page=${i})}" th:text="${i + 1}">1</a>
+            <a class="page-link rounded border-0" th:href="@{${url}(page=${i}, sort=${sort})}" th:text="${i + 1}">1</a>
         </li>
 
         <li class="page-item disabled" th:if="${end < total - 2}">
             <span class="page-link border-0 bg-transparent">&hellip;</span>
         </li>
         <li class="page-item" th:if="${end < total - 1}">
-            <a class="page-link rounded border-0" th:href="@{${url}(page=${total - 1})}" th:text="${total}">N</a>
+            <a class="page-link rounded border-0" th:href="@{${url}(page=${total - 1}, sort=${sort})}" th:text="${total}">N</a>
         </li>
 
         <li class="page-item" th:if="${page.hasNext()}">
-            <a class="page-link rounded border-0" th:href="@{${url}(page=${current + 1})}" aria-label="Next">&raquo;</a>
+            <a class="page-link rounded border-0" th:href="@{${url}(page=${current + 1}, sort=${sort})}" aria-label="Next">&raquo;</a>
         </li>
     </ul>
 </nav>
