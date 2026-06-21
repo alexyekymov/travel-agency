@@ -9,24 +9,34 @@
 -->
 <nav th:fragment="pagination(page, url)"
      th:if="${page.totalPages > 1}"
-     aria-label="Pagination" class="mt-5">
+     class="mt-5">
     <ul class="pagination pagination-sm gap-1 justify-content-center"
         th:with="current=${page.number},
                  total=${page.totalPages},
                  start=${T(java.lang.Math).max(0, page.number - 2)},
                  end=${T(java.lang.Math).min(page.totalPages - 1, page.number + 2)},
-                 sort=${param.sort != null ? param.sort[0] : null}"
+                 sort=${param.sort != null ? param.sort[0] : null},
+                 tourType=${param.tourType != null and !#strings.isEmpty(param.tourType[0]) ? param.tourType[0] : null},
+                 hotelType=${param.hotelType != null and !#strings.isEmpty(param.hotelType[0]) ? param.hotelType[0] : null},
+                 transferType=${param.transferType != null and !#strings.isEmpty(param.transferType[0]) ? param.transferType[0] : null},
+                 minPrice=${param.minPrice != null and !#strings.isEmpty(param.minPrice[0]) ? param.minPrice[0] : null},
+                 maxPrice=${param.maxPrice != null and !#strings.isEmpty(param.maxPrice[0]) ? param.maxPrice[0] : null}"
         style="--bs-pagination-color: var(--bs-success);
                --bs-pagination-hover-color: var(--bs-success);
                --bs-pagination-active-bg: var(--bs-success);
                --bs-pagination-active-border-color: var(--bs-success)">
 
         <li class="page-item" th:if="${page.hasPrevious()}">
-            <a class="page-link rounded border-0" th:href="@{${url}(page=${current - 1}, sort=${sort})}" aria-label="Previous">&laquo;</a>
+            <a class="page-link rounded border-0"
+               th:href="@{${url}(page=${current - 1}, sort=${sort}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice})}">
+                &laquo;
+            </a>
         </li>
 
         <li class="page-item" th:if="${start > 0}">
-            <a class="page-link rounded border-0" th:href="@{${url}(page=0, sort=${sort})}" th:text="1">1</a>
+            <a class="page-link rounded border-0"
+               th:href="@{${url}(page=0, sort=${sort}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
+               th:text="1">1</a>
         </li>
         <li class="page-item disabled" th:if="${start > 1}">
             <span class="page-link border-0 bg-transparent">&hellip;</span>
@@ -34,20 +44,26 @@
 
         <li class="page-item"
             th:each="i : ${#numbers.sequence(start, end)}"
-            th:classappend="${i == current} ? 'active'"
-            th:attr="aria-current=${i == current} ? 'page' : null">
-            <a class="page-link rounded border-0" th:href="@{${url}(page=${i}, sort=${sort})}" th:text="${i + 1}">1</a>
+            th:classappend="${i == current} ? 'active'">
+            <a class="page-link rounded border-0"
+               th:href="@{${url}(page=${i}, sort=${sort}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
+               th:text="${i + 1}">1</a>
         </li>
 
         <li class="page-item disabled" th:if="${end < total - 2}">
             <span class="page-link border-0 bg-transparent">&hellip;</span>
         </li>
         <li class="page-item" th:if="${end < total - 1}">
-            <a class="page-link rounded border-0" th:href="@{${url}(page=${total - 1}, sort=${sort})}" th:text="${total}">N</a>
+            <a class="page-link rounded border-0"
+               th:href="@{${url}(page=${total - 1}, sort=${sort}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
+               th:text="${total}">N</a>
         </li>
 
         <li class="page-item" th:if="${page.hasNext()}">
-            <a class="page-link rounded border-0" th:href="@{${url}(page=${current + 1}, sort=${sort})}" aria-label="Next">&raquo;</a>
+            <a class="page-link rounded border-0"
+               th:href="@{${url}(page=${current + 1}, sort=${sort}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice})}">
+                &raquo;
+            </a>
         </li>
     </ul>
 </nav>
