@@ -28,13 +28,56 @@
         </div>
     </div>
 </nav>
-<br/>
-<br/>
 
-<main>
-    <p th:each="tour : ${tours}">
-        <span th:text="|${tourStat.count}: ${tour.title} - ${tour.price} - ${tour.transferType}|"></span>
-    </p>
+<main class="py-5">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <header class="mb-4 mb-lg-5">
+                    <p class="text-uppercase fw-semibold text-success small mb-1">Curated journeys</p>
+                    <h1 class="h2 mb-2">Featured Tours</h1>
+                    <p class="text-muted mb-0">Hand-picked destinations, ready when you are.</p>
+                </header>
+
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
+                    <div class="col" th:each="tour : ${tours}">
+                        <div th:replace="~{fragments/tour-card :: card(${tour})}"></div>
+                    </div>
+                </div>
+
+                <div th:if="${tours.isEmpty()}" class="text-center text-muted border rounded py-5">
+                    No tours available yet.
+                </div>
+
+                <nav th:if="${tours.totalPages > 1}" aria-label="Tours pagination" class="mt-5">
+                    <ul class="pagination pagination-sm gap-1 justify-content-center"
+                        style="--bs-pagination-color: var(--bs-success);
+                               --bs-pagination-hover-color: var(--bs-success);
+                               --bs-pagination-active-bg: var(--bs-success);
+                               --bs-pagination-active-border-color: var(--bs-success)">
+
+                        <li class="page-item" th:if="${tours.hasPrevious()}">
+                            <a class="page-link rounded border-0" th:href="@{/(page=${tours.number - 1})}" aria-label="Previous">&laquo;</a>
+                        </li>
+
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence(0, tours.totalPages - 1)}"
+                            th:classappend="${i == tours.number} ? 'active'"
+                            th:attr="aria-current=${i == tours.number} ? 'page' : null">
+                            <a class="page-link rounded border-0" th:href="@{/(page=${i})}" th:text="${i + 1}">1</a>
+                        </li>
+
+                        <li class="page-item" th:if="${tours.hasNext()}">
+                            <a class="page-link rounded border-0" th:href="@{/(page=${tours.number + 1})}" aria-label="Next">&raquo;</a>
+                        </li>
+
+                    </ul>
+                </nav>
+
+            </div>
+        </div>
+    </div>
 </main>
 
 
