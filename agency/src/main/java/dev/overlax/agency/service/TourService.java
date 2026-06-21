@@ -1,5 +1,6 @@
 package dev.overlax.agency.service;
 
+import dev.overlax.agency.dto.TourFilterRequest;
 import dev.overlax.agency.dto.TourRequest;
 import dev.overlax.agency.dto.TourResponse;
 import dev.overlax.agency.mapper.TourMapper;
@@ -23,8 +24,15 @@ public class TourService {
     private final TourMapper tourMapper;
     private final ImageStorageService imageStorageService;
 
-    public Page<TourResponse> findAll(Pageable pageable) {
-        return tourRepository.findAll(pageable).map(tourMapper::toDto);
+    public Page<TourResponse> findAll(TourFilterRequest filter, Pageable pageable) {
+        Page<Tour> tours = tourRepository.filter(
+                filter.tourType(),
+                filter.transferType(),
+                filter.hotelType(),
+                filter.minPrice(),
+                filter.maxPrice(),
+                pageable);
+        return tours.map(tourMapper::toDto);
     }
 
     public TourResponse findById(UUID id) {

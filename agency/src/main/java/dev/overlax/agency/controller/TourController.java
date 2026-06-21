@@ -1,5 +1,6 @@
 package dev.overlax.agency.controller;
 
+import dev.overlax.agency.dto.TourFilterRequest;
 import dev.overlax.agency.dto.TourRequest;
 import dev.overlax.agency.dto.TourResponse;
 import dev.overlax.agency.model.type.HotelType;
@@ -42,8 +43,8 @@ public class TourController {
     }
 
     @GetMapping
-    public String getAll(Model model, Pageable pageable) {
-        Page<TourResponse> tours = tourService.findAll(pageable);
+    public String getAll(Model model, @ModelAttribute("filterRequest") TourFilterRequest filter, Pageable pageable) {
+        Page<TourResponse> tours = tourService.findAll(filter, pageable);
         model.addAttribute("tours", tours);
 
         return "index";
