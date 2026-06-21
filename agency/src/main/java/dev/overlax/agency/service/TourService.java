@@ -12,7 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,9 +23,8 @@ public class TourService {
     private final TourMapper tourMapper;
     private final ImageStorageService imageStorageService;
 
-    public List<TourResponse> findAll(Pageable pageable) {
-        Page<Tour> tourPage = tourRepository.findAll(pageable);
-        return tourMapper.toDtoList(tourPage.toList());
+    public Page<TourResponse> findAll(Pageable pageable) {
+        return tourRepository.findAll(pageable).map(tourMapper::toDto);
     }
 
     public TourResponse findById(UUID id) {

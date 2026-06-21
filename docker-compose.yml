@@ -9,6 +9,10 @@ services:
       - postgres
 #    env_file:
 #      - .env
+    environment:
+      APP_UPLOAD_DIR: /app/uploads
+    volumes:
+      - uploads-data:/app/uploads
     ports:
       - '8020:8080'
 
