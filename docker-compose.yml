@@ -7,8 +7,8 @@ services:
       - travel-agency-net
     depends_on:
       - postgres
-#    env_file:
-#      - .env
+    env_file:
+      - .env
     environment:
       APP_UPLOAD_DIR: /app/uploads
     volumes:
@@ -25,6 +25,10 @@ services:
       POSTGRES_DB: travel-agency
     networks:
       - travel-agency-net
+
+volumes:
+  uploads-data:
+    name: travel-agency-data
 
 networks:
   travel-agency-net:
