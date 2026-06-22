@@ -10,7 +10,6 @@ CREATE TABLE tour
     tour_type       VARCHAR(30)    NOT NULL,
     hotel_type      VARCHAR(30)    NOT NULL,
     transfer_type   VARCHAR(30)    NOT NULL,
-    available_seats INTEGER        NOT NULL CHECK (available_seats >= 0),
     hot             BOOLEAN        NOT NULL DEFAULT FALSE,
     created_at      TIMESTAMP      NOT NULL DEFAULT now(),
     created_by      UUID REFERENCES app_user (id),
