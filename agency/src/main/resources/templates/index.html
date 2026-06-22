@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Travel Agency</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-icons.min.css}" rel="stylesheet">
     <style>
         .sort-select:focus {
             border-color: var(--bs-success);
@@ -105,6 +106,14 @@
                             <input type="number" step="0.01" min="0" id="maxPrice" name="maxPrice"
                                    th:value="${filterRequest.maxPrice()}" placeholder="Any"
                                    class="form-control form-control-sm sort-select" style="width: 6rem">
+                        </div>
+                        <div>
+                            <input type="checkbox" class="btn-check" name="hot" value="true" id="hot"
+                                   autocomplete="off" th:checked="${filterRequest.hot()}">
+                            <label class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1 text-uppercase fw-semibold"
+                                   for="hot">
+                                <i class="bi bi-fire"></i> Hot
+                            </label>
                         </div>
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-sm btn-success">

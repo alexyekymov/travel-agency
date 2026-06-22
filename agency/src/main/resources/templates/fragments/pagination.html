@@ -16,6 +16,7 @@
               transferType=${param.transferType != null and !#strings.isEmpty(param.transferType[0]) ? param.transferType[0] : null},
               minPrice=${param.minPrice != null and !#strings.isEmpty(param.minPrice[0]) ? param.minPrice[0] : null},
               maxPrice=${param.maxPrice != null and !#strings.isEmpty(param.maxPrice[0]) ? param.maxPrice[0] : null},
+              hot=${param.hot != null and !#strings.isEmpty(param.hot[0]) ? param.hot[0] : null},
               size=${param.size != null and !#strings.isEmpty(param.size[0]) ? param.size[0] : null}">
 
     <div class="flex-fill order-first"></div>
@@ -33,14 +34,14 @@
 
             <li class="page-item" th:if="${page.hasPrevious()}">
                 <a class="page-link rounded border-0"
-                   th:href="@{${url}(sort=${sort}, page=${current - 1}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, size=${size})}">
+                   th:href="@{${url}(sort=${sort}, page=${current - 1}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, hot=${hot}, size=${size})}">
                     &laquo;
                 </a>
             </li>
 
             <li class="page-item" th:if="${start > 0}">
                 <a class="page-link rounded border-0"
-                   th:href="@{${url}(sort=${sort}, page=0, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, size=${size})}"
+                   th:href="@{${url}(sort=${sort}, page=0, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, hot=${hot}, size=${size})}"
                    th:text="1">1</a>
             </li>
             <li class="page-item disabled" th:if="${start > 1}">
@@ -51,7 +52,7 @@
                 th:each="i : ${#numbers.sequence(start, end)}"
                 th:classappend="${i == current} ? 'active'">
                 <a class="page-link rounded border-0"
-                   th:href="@{${url}(sort=${sort}, page=${i}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, size=${size})}"
+                   th:href="@{${url}(sort=${sort}, page=${i}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, hot=${hot}, size=${size})}"
                    th:text="${i + 1}">1</a>
             </li>
 
@@ -60,13 +61,13 @@
             </li>
             <li class="page-item" th:if="${end < total - 1}">
                 <a class="page-link rounded border-0"
-                   th:href="@{${url}(sort=${sort}, page=${total - 1}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, size=${size})}"
+                   th:href="@{${url}(sort=${sort}, page=${total - 1}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, hot=${hot}, size=${size})}"
                    th:text="${total}">N</a>
             </li>
 
             <li class="page-item" th:if="${page.hasNext()}">
                 <a class="page-link rounded border-0"
-                   th:href="@{${url}(sort=${sort}, page=${current + 1}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, size=${size})}">
+                   th:href="@{${url}(sort=${sort}, page=${current + 1}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, hot=${hot}, size=${size})}">
                     &raquo;
                 </a>
             </li>
@@ -82,6 +83,7 @@
         <input type="hidden" name="transferType" th:if="${transferType != null}" th:value="${transferType}">
         <input type="hidden" name="minPrice"     th:if="${minPrice != null}"     th:value="${minPrice}">
         <input type="hidden" name="maxPrice"     th:if="${maxPrice != null}"     th:value="${maxPrice}">
+        <input type="hidden" name="hot"          th:if="${hot != null}"          th:value="${hot}">
 
         <label for="size" class="text-uppercase fw-semibold text-success small mb-0">Items per page</label>
         <select id="size" name="size" class="form-select form-select-sm sort-select w-auto"

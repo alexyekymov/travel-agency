@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>New tour</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-icons.min.css}" rel="stylesheet">
     <style>
         .form-control:focus, .form-select:focus {
             border-color: var(--bs-success);
@@ -73,13 +74,17 @@
                                 <input type="number" th:field="*{price}" class="form-control" id="price" step="0.01"
                                        min="0" placeholder="0.00">
                             </div>
-                            <div class="col-md-6">
-                                <label for="availableSeats"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Available
-                                    seats</label>
-                                <input type="number" th:field="*{availableSeats}" id="availableSeats" min="0"
-                                       class="form-control"
-                                       placeholder="0">
+                            <div class="col-md-6 d-flex flex-column">
+                                <label for="hot" class="form-label text-uppercase fw-semibold text-success small mb-1">Hot
+                                    deal</label>
+                                <div class="flex-grow-1 d-flex align-items-center">
+                                    <input type="checkbox" class="btn-check" name="hot" value="true" id="hot"
+                                           autocomplete="off" th:checked="*{hot}">
+                                    <label class="btn btn-outline-success d-inline-flex align-items-center gap-1 text-uppercase fw-semibold"
+                                           for="hot">
+                                        <i class="bi bi-fire"></i> Hot
+                                    </label>
+                                </div>
                             </div>
 
                             <div class="col-md-6">
@@ -139,7 +144,7 @@
                                 <input type="file" th:field="*{image}" class="form-control" id="image" accept="image/*">
                             </div>
 
-                            <div class="col-12 d-flex gap-2 mt-2">
+                            <div class="col-12 d-flex gap-2 mt-4">
                                 <button type="submit" class="btn btn-success text-uppercase fw-semibold">Create tour
                                 </button>
                                 <a th:href="@{/}" class="btn btn-outline-secondary">Cancel</a>
