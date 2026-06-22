@@ -43,7 +43,9 @@ public class TourController {
     }
 
     @GetMapping
-    public String getAll(Model model, @ModelAttribute("filterRequest") TourFilterRequest filter, Pageable pageable) {
+    public String getAll(Model model,
+                         @ModelAttribute("filterRequest") TourFilterRequest filter,
+                         Pageable pageable) {
         Page<TourResponse> tours = tourService.findAll(filter, pageable);
         model.addAttribute("tours", tours);
 
@@ -59,7 +61,9 @@ public class TourController {
 
     @GetMapping("/tours/new")
     public String newForm(Model model) {
-        model.addAttribute("tourRequest", new TourRequest(null, null, null, null, null, null, null, null, null, null));
+        model.addAttribute("tourRequest",
+                new TourRequest(null, null, null, null, null, null,
+                        null, null, null, null));
         return "tours/form";
     }
 
