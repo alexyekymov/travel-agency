@@ -3,70 +3,95 @@
 <body>
 
 <!--
-    usage:  th:replace="~{fragments/pagination :: pagination(${page}, '/tours')}"
+    usage:  th:replace="~{fragments/pagination :: pagination(${page}, '/')}"
     page:   a Spring Data Page<?>
-    url:    base path the page links point to
+    url:    base path the links point to
 -->
-<nav th:fragment="pagination(page, url)"
-     th:if="${page.totalPages > 1}"
-     class="mt-5">
-    <ul class="pagination pagination-sm gap-1 justify-content-center"
-        th:with="current=${page.number},
-                 total=${page.totalPages},
-                 start=${T(java.lang.Math).max(0, page.number - 2)},
-                 end=${T(java.lang.Math).min(page.totalPages - 1, page.number + 2)},
-                 sort=${param.sort != null ? param.sort[0] : null},
-                 tourType=${param.tourType != null and !#strings.isEmpty(param.tourType[0]) ? param.tourType[0] : null},
-                 hotelType=${param.hotelType != null and !#strings.isEmpty(param.hotelType[0]) ? param.hotelType[0] : null},
-                 transferType=${param.transferType != null and !#strings.isEmpty(param.transferType[0]) ? param.transferType[0] : null},
-                 minPrice=${param.minPrice != null and !#strings.isEmpty(param.minPrice[0]) ? param.minPrice[0] : null},
-                 maxPrice=${param.maxPrice != null and !#strings.isEmpty(param.maxPrice[0]) ? param.maxPrice[0] : null}"
-        style="--bs-pagination-color: var(--bs-success);
-               --bs-pagination-hover-color: var(--bs-success);
-               --bs-pagination-active-bg: var(--bs-success);
-               --bs-pagination-active-border-color: var(--bs-success)">
+<div th:fragment="pagination(page, url)"
+     th:if="${page.totalElements > 0}"
+     class="d-flex align-items-center gap-3 mt-5"
+     th:with="sort=${param.sort != null and !#strings.isEmpty(param.sort[0]) ? param.sort[0] : null},
+              tourType=${param.tourType != null and !#strings.isEmpty(param.tourType[0]) ? param.tourType[0] : null},
+              hotelType=${param.hotelType != null and !#strings.isEmpty(param.hotelType[0]) ? param.hotelType[0] : null},
+              transferType=${param.transferType != null and !#strings.isEmpty(param.transferType[0]) ? param.transferType[0] : null},
+              minPrice=${param.minPrice != null and !#strings.isEmpty(param.minPrice[0]) ? param.minPrice[0] : null},
+              maxPrice=${param.maxPrice != null and !#strings.isEmpty(param.maxPrice[0]) ? param.maxPrice[0] : null},
+              size=${param.size != null and !#strings.isEmpty(param.size[0]) ? param.size[0] : null}">
 
-        <li class="page-item" th:if="${page.hasPrevious()}">
-            <a class="page-link rounded border-0"
-               th:href="@{${url}(page=${current - 1}, sort=${sort}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice})}">
-                &laquo;
-            </a>
-        </li>
+    <div class="flex-fill order-first"></div>
 
-        <li class="page-item" th:if="${start > 0}">
-            <a class="page-link rounded border-0"
-               th:href="@{${url}(page=0, sort=${sort}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
-               th:text="1">1</a>
-        </li>
-        <li class="page-item disabled" th:if="${start > 1}">
-            <span class="page-link border-0 bg-transparent">&hellip;</span>
-        </li>
+    <nav th:if="${page.totalPages > 1}"
+         th:with="current=${page.number},
+                  total=${page.totalPages},
+                  start=${T(java.lang.Math).max(0, page.number - 2)},
+                  end=${T(java.lang.Math).min(page.totalPages - 1, page.number + 2)}">
+        <ul class="pagination pagination-sm gap-1 justify-content-center mb-0"
+            style="--bs-pagination-color: var(--bs-success);
+                   --bs-pagination-hover-color: var(--bs-success);
+                   --bs-pagination-active-bg: var(--bs-success);
+                   --bs-pagination-active-border-color: var(--bs-success)">
 
-        <li class="page-item"
-            th:each="i : ${#numbers.sequence(start, end)}"
-            th:classappend="${i == current} ? 'active'">
-            <a class="page-link rounded border-0"
-               th:href="@{${url}(page=${i}, sort=${sort}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
-               th:text="${i + 1}">1</a>
-        </li>
+            <li class="page-item" th:if="${page.hasPrevious()}">
+                <a class="page-link rounded border-0"
+                   th:href="@{${url}(sort=${sort}, page=${current - 1}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, size=${size})}">
+                    &laquo;
+                </a>
+            </li>
 
-        <li class="page-item disabled" th:if="${end < total - 2}">
-            <span class="page-link border-0 bg-transparent">&hellip;</span>
-        </li>
-        <li class="page-item" th:if="${end < total - 1}">
-            <a class="page-link rounded border-0"
-               th:href="@{${url}(page=${total - 1}, sort=${sort}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice})}"
-               th:text="${total}">N</a>
-        </li>
+            <li class="page-item" th:if="${start > 0}">
+                <a class="page-link rounded border-0"
+                   th:href="@{${url}(sort=${sort}, page=0, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, size=${size})}"
+                   th:text="1">1</a>
+            </li>
+            <li class="page-item disabled" th:if="${start > 1}">
+                <span class="page-link border-0 bg-transparent">&hellip;</span>
+            </li>
 
-        <li class="page-item" th:if="${page.hasNext()}">
-            <a class="page-link rounded border-0"
-               th:href="@{${url}(page=${current + 1}, sort=${sort}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice})}">
-                &raquo;
-            </a>
-        </li>
-    </ul>
-</nav>
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(start, end)}"
+                th:classappend="${i == current} ? 'active'">
+                <a class="page-link rounded border-0"
+                   th:href="@{${url}(sort=${sort}, page=${i}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, size=${size})}"
+                   th:text="${i + 1}">1</a>
+            </li>
+
+            <li class="page-item disabled" th:if="${end < total - 2}">
+                <span class="page-link border-0 bg-transparent">&hellip;</span>
+            </li>
+            <li class="page-item" th:if="${end < total - 1}">
+                <a class="page-link rounded border-0"
+                   th:href="@{${url}(sort=${sort}, page=${total - 1}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, size=${size})}"
+                   th:text="${total}">N</a>
+            </li>
+
+            <li class="page-item" th:if="${page.hasNext()}">
+                <a class="page-link rounded border-0"
+                   th:href="@{${url}(sort=${sort}, page=${current + 1}, tourType=${tourType}, hotelType=${hotelType}, transferType=${transferType}, minPrice=${minPrice}, maxPrice=${maxPrice}, size=${size})}">
+                    &raquo;
+                </a>
+            </li>
+        </ul>
+    </nav>
+
+    <form method="get" th:action="@{${url}}"
+          th:with="currentSize=${param.size != null ? param.size[0] : '12'}"
+          class="d-flex align-items-center gap-2 flex-fill order-last justify-content-end">
+        <input type="hidden" name="sort"         th:if="${sort != null}"         th:value="${sort}">
+        <input type="hidden" name="tourType"     th:if="${tourType != null}"     th:value="${tourType}">
+        <input type="hidden" name="hotelType"    th:if="${hotelType != null}"    th:value="${hotelType}">
+        <input type="hidden" name="transferType" th:if="${transferType != null}" th:value="${transferType}">
+        <input type="hidden" name="minPrice"     th:if="${minPrice != null}"     th:value="${minPrice}">
+        <input type="hidden" name="maxPrice"     th:if="${maxPrice != null}"     th:value="${maxPrice}">
+
+        <label for="size" class="text-uppercase fw-semibold text-success small mb-0">Items per page</label>
+        <select id="size" name="size" class="form-select form-select-sm sort-select w-auto"
+                onchange="this.form.submit()">
+            <option value="12" th:selected="${currentSize == '12'}">12</option>
+            <option value="24" th:selected="${currentSize == '24'}">24</option>
+            <option value="36" th:selected="${currentSize == '36'}">36</option>
+        </select>
+    </form>
+</div>
 
 </body>
 </html>

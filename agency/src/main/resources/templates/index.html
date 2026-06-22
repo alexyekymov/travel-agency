@@ -50,6 +50,8 @@
                       th:with="sort=${param.sort != null ? param.sort[0] : ''}"
                       class="d-flex flex-wrap align-items-end justify-content-between gap-3 mb-4">
 
+                    <input type="hidden" name="size" th:if="${param.size != null and !#strings.isEmpty(param.size[0])}" th:value="${param.size[0]}">
+
                     <!-- filters -->
                     <div class="d-flex flex-wrap align-items-end gap-2">
                         <div>
