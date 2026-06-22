@@ -60,10 +60,7 @@ public class TourController {
     }
 
     @GetMapping("/tours/new")
-    public String newForm(Model model) {
-        model.addAttribute("tourRequest",
-                new TourRequest(null, null, null, null, null, null,
-                        null, null, null, null));
+    public String newForm(@ModelAttribute TourRequest tourRequest) {
         return "tours/form";
     }
 
