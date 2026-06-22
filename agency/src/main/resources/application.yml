@@ -17,6 +17,10 @@ spring:
         default-page-size: 12
         max-page-size: 36
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
 app:
   upload-dir: ${APP_UPLOAD_DIR:${user.home}/travel-agency-uploads}
 
