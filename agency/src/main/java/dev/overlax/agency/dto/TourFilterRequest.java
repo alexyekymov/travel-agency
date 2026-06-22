@@ -10,5 +10,6 @@ public record TourFilterRequest(TourType tourType,
                                 TransferType transferType,
                                 HotelType hotelType,
                                 BigDecimal minPrice,
-                                BigDecimal maxPrice) {
+                                BigDecimal maxPrice,
+                                Boolean hot) {
 }

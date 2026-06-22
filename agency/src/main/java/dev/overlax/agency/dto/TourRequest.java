@@ -13,5 +13,5 @@ public record TourRequest(String title, String description, BigDecimal price,
                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate arrivalDate,
                           @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate evictionDate,
                           TourType tourType, HotelType hotelType, TransferType transferType,
-                          Integer availableSeats, MultipartFile image) {
+                          Boolean hot, MultipartFile image) {
 }

@@ -57,11 +57,8 @@ public class Tour {
     @Enumerated(EnumType.STRING)
     private TransferType transferType;
 
-    @Column(name = "available_seats")
-    private Integer availableSeats;
-
     @Column(name = "hot")
-    private boolean hot;
+    private Boolean hot;
 
     @Column(name = "created_at")
     @Generated(event = EventType.INSERT)

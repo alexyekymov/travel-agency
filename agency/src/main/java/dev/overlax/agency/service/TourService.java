@@ -31,6 +31,7 @@ public class TourService {
                 filter.hotelType(),
                 filter.minPrice(),
                 filter.maxPrice(),
+                filter.hot(),
                 pageable);
         return tours.map(tourMapper::toDto);
     }
