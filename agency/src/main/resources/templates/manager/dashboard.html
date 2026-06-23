@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Manager dashboard</title>
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/css/bootstrap-icons.min.css}" rel="stylesheet">
+    <th:block th:replace="~{fragments/head :: assets}"></th:block>
     <style>
         .sort-select:focus {
             border-color: var(--bs-success);
@@ -23,8 +22,7 @@
 
                 <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
                     <div>
-                        <p class="text-uppercase fw-semibold text-success small mb-1">Manager</p>
-                        <h1 class="h2 mb-0">Tours dashboard</h1>
+                        <h1 class="h2 mb-0">Tours management</h1>
                     </div>
                     <a sec:authorize="hasRole('ADMIN')" th:href="@{/tours/new}"
                        class="btn btn-success text-uppercase fw-semibold d-inline-flex align-items-center gap-2">

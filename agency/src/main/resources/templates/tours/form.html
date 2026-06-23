@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${tourId != null} ? 'Edit tour' : 'New tour'">New tour</title>
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{/css/bootstrap-icons.min.css}" rel="stylesheet">
+    <th:block th:replace="~{fragments/head :: assets}"></th:block>
     <style>
         .form-control:focus, .form-select:focus {
             border-color: var(--bs-success);
