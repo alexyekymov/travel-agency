@@ -3,6 +3,8 @@ package dev.overlax.agency.controller;
 import dev.overlax.agency.model.type.Role;
 import dev.overlax.agency.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,8 +30,9 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public String users(Model model) {
-        model.addAttribute("users", userService.getAllUsers());
+    public String users(@PageableDefault(sort = {"lastName", "firstName"}) Pageable pageable,
+                        Model model) {
+        model.addAttribute("users", userService.getAllUsers(pageable));
         return "admin/users";
     }
 

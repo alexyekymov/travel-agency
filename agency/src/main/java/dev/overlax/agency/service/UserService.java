@@ -3,8 +3,9 @@ package dev.overlax.agency.service;
 import dev.overlax.agency.dto.RegisterRequest;
 import dev.overlax.agency.dto.UserDTO;
 import dev.overlax.agency.model.type.Role;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -16,7 +17,7 @@ public interface UserService {
 
     UserDTO getById(UUID id);
 
-    List<UserDTO> getAllUsers();
+    Page<UserDTO> getAllUsers(Pageable pageable);
 
     void blockUser(UUID id);
 
