@@ -1,8 +1,7 @@
 package dev.overlax.agency.service;
 
 import dev.overlax.agency.dto.UserDTO;
-import dev.overlax.agency.mapper.UserMapper;
-import dev.overlax.agency.model.User;
+import dev.overlax.agency.mapper.UserToDtoMapper;
 import dev.overlax.agency.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +16,8 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
-    private final UserMapper mapper;
-//
+    private final UserToDtoMapper mapper;
+
 //    @Override
 //    public UserDTO register(UserDTO userDTO) {
 //        return null;
@@ -28,15 +27,15 @@ public class UserServiceImpl implements UserService {
 //    public UserDTO updateUser(String username, UserDTO userDTO) {
 //        return null;
 //    }
-//
-//    @Override
-//    public UserDTO getUserByUsername(String username) {
-//        return repository.findUserByUsername(username)
-//                .map(mapper::toUserDTO)
-//                .orElseThrow(
-//                        () -> new EntityNotFoundException(String.format("User with username: %s not found", username)));
-//    }
-//
+
+    @Override
+    public UserDTO getUserByEmail(String email) {
+        return repository.findByEmailIgnoreCase(email)
+                .map(mapper::toDto)
+                .orElseThrow(
+                        () -> new EntityNotFoundException(String.format("User with username: %s not found", email)));
+    }
+
 //    @Override
 //    @Transactional
 //    public UserDTO changeAccountStatus(UserDTO userDTO) {
@@ -50,12 +49,12 @@ public class UserServiceImpl implements UserService {
 //                        () -> new EntityNotFoundException(String.format("User with id: %s not found", dummy.getId())));
 //
 //    }
-//
-//    @Override
-//    public UserDTO getUserById(UUID id) {
-//        return repository.findById(id)
-//                .map(mapper::toUserDTO)
-//                .orElseThrow(() -> new EntityNotFoundException(String.format("User with id: %s not found", id)));
-//    }
+
+    @Override
+    public UserDTO getById(UUID id) {
+        return repository.findById(id)
+                .map(mapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("User with id: %s not found", id)));
+    }
 
 }

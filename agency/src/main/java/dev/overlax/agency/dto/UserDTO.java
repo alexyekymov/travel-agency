@@ -1,90 +1,10 @@
 package dev.overlax.agency.dto;
 
+import dev.overlax.agency.model.type.Role;
 
-import dev.overlax.agency.model.Voucher;
+import java.util.Set;
+import java.util.UUID;
 
-import java.util.List;
-
-public class UserDTO {
-
-    private String id;
-
-    private String username;
-
-    private String password;
-
-    private String role;
-
-    private List<Voucher> vouchers;
-
-    private String phoneNumber;
-
-    private Double balance;
-
-    private boolean active;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public List<Voucher> getVouchers() {
-        return vouchers;
-    }
-
-    public void setVouchers(List<Voucher> vouchers) {
-        this.vouchers = vouchers;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public Double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(Double balance) {
-        this.balance = balance;
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
+public record UserDTO(UUID id, String email, String password, Set<Role> roles) {
 
 }

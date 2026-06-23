@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -37,8 +39,10 @@ public class User {
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_role")
+    @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "role")
-    private Role role;
+    private Set<Role> roles = EnumSet.noneOf(Role.class);
 
     @Column(name = "account_status")
     private boolean active;

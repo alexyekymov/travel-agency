@@ -1,8 +1,6 @@
 package dev.overlax.agency.service;
 
-import dev.overlax.agency.dto.UserDTO;
-import dev.overlax.agency.mapper.UserMapper;
-import dev.overlax.agency.model.User;
+import dev.overlax.agency.mapper.UserToDtoMapper;
 import dev.overlax.agency.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,12 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.Optional;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceImplTest {
@@ -28,7 +21,7 @@ public class UserServiceImplTest {
     private PasswordEncoder passwordEncoder;
 
     @Mock
-    private UserMapper userMapper;
+    private UserToDtoMapper userToDtoMapper;
 
     @InjectMocks
     private UserServiceImpl userService;
