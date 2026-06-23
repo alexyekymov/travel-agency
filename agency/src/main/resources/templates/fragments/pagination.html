@@ -8,7 +8,7 @@
     url:    base path the links point to
 -->
 <div th:fragment="pagination(page, url)"
-     th:if="${page.totalElements > 0}"
+     th:if="${page.totalPages > 1}"
      class="d-flex align-items-center gap-3 mt-5"
      th:with="sort=${param.sort != null and !#strings.isEmpty(param.sort[0]) ? param.sort[0] : null},
               tourType=${param.tourType != null and !#strings.isEmpty(param.tourType[0]) ? param.tourType[0] : null},
@@ -21,8 +21,7 @@
 
     <div class="flex-fill order-first"></div>
 
-    <nav th:if="${page.totalPages > 1}"
-         th:with="current=${page.number},
+    <nav th:with="current=${page.number},
                   total=${page.totalPages},
                   start=${T(java.lang.Math).max(0, page.number - 2)},
                   end=${T(java.lang.Math).min(page.totalPages - 1, page.number + 2)}">
