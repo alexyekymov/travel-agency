@@ -3,7 +3,7 @@ package dev.overlax.agency.service;
 import dev.overlax.agency.dto.TourFilterRequest;
 import dev.overlax.agency.dto.TourRequest;
 import dev.overlax.agency.dto.TourResponse;
-import dev.overlax.agency.mapper.TourMapper;
+import dev.overlax.agency.mapper.TourResponseMapper;
 import dev.overlax.agency.model.Tour;
 import dev.overlax.agency.repository.TourRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -21,7 +21,7 @@ import java.util.UUID;
 public class TourService {
 
     private final TourRepository tourRepository;
-    private final TourMapper tourMapper;
+    private final TourResponseMapper tourResponseMapper;
     private final ImageStorageService imageStorageService;
 
     public Page<TourResponse> findAll(TourFilterRequest filter, Pageable pageable) {
@@ -33,23 +33,23 @@ public class TourService {
                 filter.maxPrice(),
                 filter.hot(),
                 pageable);
-        return tours.map(tourMapper::toDto);
+        return tours.map(tourResponseMapper::toDto);
     }
 
     public TourResponse findById(UUID id) {
         log.debug("Finding tour by id: {}", id);
         TourResponse tour = tourRepository.findById(id)
-                .map(tourMapper::toDto)
+                .map(tourResponseMapper::toDto)
                 .orElseThrow(() -> new EntityNotFoundException("Tour not found: " + id));
         log.info("Tour found: {}", id);
         return tour;
     }
 
     public TourResponse create(TourRequest request) {
-        Tour tour = tourMapper.toEntity(request);
+        Tour tour = tourResponseMapper.toEntity(request);
         tour.setImageName(imageStorageService.save(request.image()));
         Tour saved = tourRepository.save(tour);
         log.info("Tour created: {}", saved.getId());
-        return tourMapper.toDto(saved);
+        return tourResponseMapper.toDto(saved);
     }
 }
