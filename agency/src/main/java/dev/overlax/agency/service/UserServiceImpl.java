@@ -1,13 +1,19 @@
 package dev.overlax.agency.service;
 
+import dev.overlax.agency.dto.RegisterRequest;
 import dev.overlax.agency.dto.UserDTO;
+import dev.overlax.agency.exception.EmailAlreadyExistsException;
 import dev.overlax.agency.mapper.UserToDtoMapper;
+import dev.overlax.agency.model.User;
+import dev.overlax.agency.model.type.Role;
 import dev.overlax.agency.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.EnumSet;
 import java.util.UUID;
 
 @Service
@@ -17,16 +23,28 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository repository;
     private final UserToDtoMapper mapper;
+    private final PasswordEncoder passwordEncoder;
 
-//    @Override
-//    public UserDTO register(UserDTO userDTO) {
-//        return null;
-//    }
-//
-//    @Override
-//    public UserDTO updateUser(String username, UserDTO userDTO) {
-//        return null;
-//    }
+    @Override
+    @Transactional
+    public UserDTO register(RegisterRequest request) {
+        if (repository.existsByEmailIgnoreCase(request.email())) {
+            throw new EmailAlreadyExistsException(
+                    String.format("User with email: %s already exists", request.email()));
+        }
+
+        User user = new User();
+        user.setId(UUID.randomUUID());
+        user.setFirstName(request.firstName());
+        user.setLastName(request.lastName());
+        user.setEmail(request.email());
+        user.setPassword(passwordEncoder.encode(request.password()));
+        user.setPhoneNumber(request.phoneNumber());
+        user.setRoles(EnumSet.of(Role.USER));
+        user.setActive(true);
+
+        return mapper.toDto(repository.save(user));
+    }
 
     @Override
     public UserDTO getUserByEmail(String email) {
