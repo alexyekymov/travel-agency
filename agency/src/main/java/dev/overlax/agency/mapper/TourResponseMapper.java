@@ -10,7 +10,7 @@ import org.mapstruct.ReportingPolicy;
 
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING,
         unmappedTargetPolicy = ReportingPolicy.IGNORE)
-public interface TourMapper extends Mappable<Tour, TourResponse> {
+public interface TourResponseMapper extends MappableToDto<Tour, TourResponse> {
 
     @Mapping(target = "imageName", ignore = true)
     @Mapping(target = "id", ignore = true)
