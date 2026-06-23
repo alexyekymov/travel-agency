@@ -1,11 +1,10 @@
 package dev.overlax.agency.config;
 
 import dev.overlax.agency.repository.UserRepository;
-import dev.overlax.agency.security.CookieUtil;
+import dev.overlax.agency.security.JwtProperties;
 import dev.overlax.agency.security.JwtTokenFilter;
 import dev.overlax.agency.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpHeaders;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -33,12 +32,14 @@ public class SecurityConfig {
     private final UserRepository userRepository;
     private final ApplicationContext applicationContext;
     private final JwtTokenProvider tokenProvider;
+    private final JwtProperties jwtProperties;
     private final HandlerExceptionResolver resolver;
 
-    public SecurityConfig(UserRepository userRepository, ApplicationContext applicationContext, JwtTokenProvider tokenProvider, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
+    public SecurityConfig(UserRepository userRepository, ApplicationContext applicationContext, JwtTokenProvider tokenProvider, JwtProperties jwtProperties, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
         this.userRepository = userRepository;
         this.applicationContext = applicationContext;
         this.tokenProvider = tokenProvider;
+        this.jwtProperties = jwtProperties;
         this.resolver = resolver;
     }
 
@@ -53,16 +54,14 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auths ->
                         auths
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                                .requestMatchers("/", "/auth/sign-in", "/api/auth/login", "/api/auth/refresh").permitAll()
+                                .requestMatchers("/", "/auth/sign-in", "/api/auth/login").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(
                         new LoginUrlAuthenticationEntryPoint("/auth/sign-in")))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .deleteCookies(JwtTokenFilter.ACCESS_TOKEN_COOKIE)
-                        .addLogoutHandler((request, response, auth) ->
-                                response.addHeader(HttpHeaders.SET_COOKIE, CookieUtil.expiredRefresh().toString()))
+                        .deleteCookies(JwtTokenFilter.ACCESS_TOKEN_COOKIE, JwtTokenFilter.REFRESH_TOKEN_COOKIE)
                         .logoutSuccessUrl("/auth/sign-in?logout"))
                 .sessionManagement(sessionManager ->
                         sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -80,6 +79,6 @@ public class SecurityConfig {
 
     @Bean
     public JwtTokenFilter jwtTokenFilter() {
-        return new JwtTokenFilter(tokenProvider, resolver);
+        return new JwtTokenFilter(tokenProvider, jwtProperties, resolver);
     }
 }

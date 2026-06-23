@@ -3,7 +3,6 @@ package dev.overlax.agency.restcontroller;
 import dev.overlax.agency.dto.UserDTO;
 import dev.overlax.agency.security.CookieUtil;
 import dev.overlax.agency.security.JwtProperties;
-import dev.overlax.agency.security.JwtTokenFilter;
 import dev.overlax.agency.security.JwtTokenProvider;
 import dev.overlax.agency.security.dto.JwtRequest;
 import dev.overlax.agency.security.dto.JwtResponse;
@@ -13,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,19 +43,6 @@ public class AuthenticationRestController {
         return JwtResponse.builder()
                 .id(user.id())
                 .email(user.email())
-                .build();
-    }
-
-    @PostMapping("/refresh")
-    public JwtResponse refresh(
-            @CookieValue(name = JwtTokenFilter.REFRESH_TOKEN_COOKIE, required = false) String refreshToken,
-            HttpServletResponse response) {
-        JwtResponse tokens = tokenProvider.refreshUserTokens(refreshToken);
-        setTokenCookies(response, tokens.accessToken(), tokens.refreshToken());
-
-        return JwtResponse.builder()
-                .id(tokens.id())
-                .email(tokens.email())
                 .build();
     }
 
