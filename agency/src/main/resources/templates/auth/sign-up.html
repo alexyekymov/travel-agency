@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign up</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-icons.min.css}" rel="stylesheet">
+    <style>
+        .form-control:focus {
+            border-color: var(--bs-success);
+            box-shadow: 0 0 0 .25rem rgba(var(--bs-success-rgb), .25);
+        }
+    </style>
+</head>
+<body>
+
+<nav th:replace="~{fragments/header :: header}"></nav>
+
+<main class="py-5">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-md-7 col-lg-5">
+
+                <a th:href="@{/}"
+                   class="text-uppercase fw-semibold text-success small text-decoration-none mb-4 d-inline-block">&larr;
+                    Back to tours</a>
+
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+
+                        <p class="text-uppercase fw-semibold text-success small mb-1">Join us</p>
+                        <h1 class="h3 mb-4">Create your account</h1>
+
+                        <form th:action="@{/auth/sign-up}" th:object="${registerRequest}" method="post"
+                              class="row g-3" novalidate>
+
+                            <div class="col-12 col-sm-6">
+                                <label for="firstName"
+                                       class="form-label text-uppercase fw-semibold text-success small mb-1">First
+                                    name</label>
+                                <input type="text" id="firstName" th:field="*{firstName}" class="form-control"
+                                       th:errorclass="is-invalid" placeholder="Jane" autocomplete="given-name" required>
+                                <div class="invalid-feedback" th:errors="*{firstName}">First name is required.</div>
+                            </div>
+
+                            <div class="col-12 col-sm-6">
+                                <label for="lastName"
+                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Last
+                                    name</label>
+                                <input type="text" id="lastName" th:field="*{lastName}" class="form-control"
+                                       th:errorclass="is-invalid" placeholder="Doe" autocomplete="family-name" required>
+                                <div class="invalid-feedback" th:errors="*{lastName}">Last name is required.</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="email"
+                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Email</label>
+                                <input type="email" id="email" th:field="*{email}" class="form-control"
+                                       th:errorclass="is-invalid" placeholder="you@example.com" autocomplete="email"
+                                       required>
+                                <div class="invalid-feedback" th:errors="*{email}">Enter a valid email.</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="password"
+                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Password</label>
+                                <input type="password" id="password" th:field="*{password}" class="form-control"
+                                       th:errorclass="is-invalid" placeholder="At least 8 characters"
+                                       autocomplete="new-password" required>
+                                <div class="invalid-feedback" th:errors="*{password}">
+                                    Password must be at least 8 characters.
+                                </div>
+                                <div class="form-text">Use 8 or more characters.</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="phoneNumber"
+                                       class="form-label text-uppercase fw-semibold text-success small mb-1">
+                                    Phone number <span class="text-muted text-lowercase fw-normal">(optional)</span>
+                                </label>
+                                <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" class="form-control"
+                                       th:errorclass="is-invalid" placeholder="+1 555 123 4567" autocomplete="tel">
+                                <div class="invalid-feedback" th:errors="*{phoneNumber}">Enter a valid phone number.</div>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-success text-uppercase fw-semibold w-100">Sign up
+                                </button>
+                            </div>
+
+                        </form>
+
+                        <p class="text-muted small text-center mb-0 mt-4">
+                            Already have an account?
+                            <a th:href="@{/auth/sign-in}"
+                               class="text-success fw-semibold text-decoration-none">Sign in</a>
+                        </p>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
