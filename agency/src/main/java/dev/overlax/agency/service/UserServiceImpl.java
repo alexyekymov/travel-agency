@@ -9,11 +9,14 @@ import dev.overlax.agency.model.type.Role;
 import dev.overlax.agency.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -72,6 +75,38 @@ public class UserServiceImpl implements UserService {
     public UserDTO getById(UUID id) {
         return repository.findById(id)
                 .map(mapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("User with id: %s not found", id)));
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserDTO> getAllUsers() {
+        return mapper.toDtoList(repository.findAll());
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void blockUser(UUID id) {
+        find(id).setActive(false);
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void unblockUser(UUID id) {
+        find(id).setActive(true);
+    }
+
+    @Override
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
+    public void changeRoles(UUID id, Set<Role> roles) {
+        find(id).setRoles(roles.isEmpty() ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles));
+    }
+
+    private User find(UUID id) {
+        return repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("User with id: %s not found", id)));
     }
 

@@ -25,6 +25,7 @@ public interface TourRepository extends JpaRepository<Tour, UUID> {
               and (:minPrice is null or t.price >= :minPrice)
               and (:maxPrice is null or t.price <= :maxPrice)
               and (:hot is null or t.hot = :hot)
+            order by t.hot desc, t.createdAt desc
             """)
     Page<Tour> filter(@Param("tourType") TourType tourType,
                       @Param("transferType") TransferType transferType,

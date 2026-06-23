@@ -69,4 +69,38 @@ public class TourController {
         TourResponse created = tourService.create(tourRequest);
         return "redirect:/tours/" + created.id();
     }
+
+    @GetMapping("/manage")
+    public String dashboard(Model model,
+                            @ModelAttribute("filterRequest") TourFilterRequest filter,
+                            Pageable pageable) {
+        Page<TourResponse> tours = tourService.findAll(filter, pageable);
+        model.addAttribute("tours", tours);
+        return "manager/dashboard";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String editForm(@PathVariable UUID id, Model model) {
+        model.addAttribute("tourRequest", tourService.getForEdit(id));
+        model.addAttribute("tourId", id);
+        return "tours/form";
+    }
+
+    @PostMapping("/{id}")
+    public String update(@PathVariable UUID id, @ModelAttribute TourRequest tourRequest) {
+        tourService.update(id, tourRequest);
+        return "redirect:/tours/manage";
+    }
+
+    @PostMapping("/{id}/hot")
+    public String toggleHot(@PathVariable UUID id) {
+        tourService.toggleHot(id);
+        return "redirect:/tours/manage";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable UUID id) {
+        tourService.delete(id);
+        return "redirect:/tours/manage";
+    }
 }

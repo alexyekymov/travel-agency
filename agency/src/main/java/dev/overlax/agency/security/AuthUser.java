@@ -20,6 +20,7 @@ public class AuthUser implements UserDetails {
     private UUID id;
     private final String email;
     private final String password;
+    private final boolean enabled;
     private final Collection<? extends GrantedAuthority> authorities;
 
     @Override
@@ -35,5 +36,10 @@ public class AuthUser implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
 }

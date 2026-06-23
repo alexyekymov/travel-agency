@@ -11,6 +11,7 @@ public class AuthUserFactory {
                 .id(user.getId())
                 .email(user.getEmail())
                 .password(user.getPassword())
+                .enabled(user.isActive())
                 .authorities(Set.copyOf(user.getRoles()))
                 .build();
     }

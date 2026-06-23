@@ -11,6 +11,7 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -79,6 +80,9 @@ public class JwtTokenProvider {
 
         UUID userId = getId(refreshToken);
         UserDTO user = userService.getById(userId);
+        if (!user.active()) {
+            throw new DisabledException("User is blocked: " + user.email());
+        }
         String newAccessToken = createAccessToken(userId, user.email(), user.roles());
         String newRefreshToken = createRefreshToken(userId, user.email());
 

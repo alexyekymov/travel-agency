@@ -1,14 +1,13 @@
 package dev.overlax.agency.config;
 
-import dev.overlax.agency.repository.UserRepository;
 import dev.overlax.agency.security.JwtProperties;
 import dev.overlax.agency.security.JwtTokenFilter;
 import dev.overlax.agency.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -27,18 +26,16 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final UserRepository userRepository;
-    private final ApplicationContext applicationContext;
     private final JwtTokenProvider tokenProvider;
     private final JwtProperties jwtProperties;
     private final HandlerExceptionResolver resolver;
 
-    public SecurityConfig(UserRepository userRepository, ApplicationContext applicationContext, JwtTokenProvider tokenProvider, JwtProperties jwtProperties, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
-        this.userRepository = userRepository;
-        this.applicationContext = applicationContext;
+    public SecurityConfig(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver,
+                          JwtTokenProvider tokenProvider,
+                          JwtProperties jwtProperties) {
+        this.resolver = resolver;
         this.tokenProvider = tokenProvider;
         this.jwtProperties = jwtProperties;
-        this.resolver = resolver;
     }
 
     @Bean
@@ -48,6 +45,10 @@ public class SecurityConfig {
                         auths
                                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                 .requestMatchers("/", "/auth/sign-in", "/auth/sign-up", "/api/auth/login").permitAll()
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/tours/manage").hasRole("MANAGER")
+                                .requestMatchers("/tours/new").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/tours").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(
