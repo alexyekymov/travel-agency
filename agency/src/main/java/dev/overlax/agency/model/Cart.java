@@ -1,6 +1,5 @@
 package dev.overlax.agency.model;
 
-import dev.overlax.agency.model.type.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,37 +15,41 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "orders")
+@Table(name = "cart")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Order {
+public class Cart {
 
     @Id
-    @Generated(event = EventType.INSERT)
     @Column(name = "id")
+    @Generated(event = EventType.INSERT)
     private UUID id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id")
+    @OneToOne(optional = false)
+    @JoinColumn(name = "user_id", unique = true)
     private User user;
-
-    @Column(name = "total_price")
-    private BigDecimal totalPrice;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status")
-    private OrderStatus status;
 
     @CreationTimestamp
     @Column(name = "created_at")
     private Instant createdAt;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> items = new ArrayList<>();
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CartItem> items = new ArrayList<>();
 
-    public void addItem(OrderItem item) {
+    public void addItem(CartItem item) {
         items.add(item);
-        item.setOrder(this);
+        item.setCart(this);
+    }
+
+    public void removeItem(CartItem item) {
+        items.remove(item);
+        item.setCart(null);
+    }
+
+    public BigDecimal getTotal() {
+        return items.stream()
+                .map(CartItem::getLineTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

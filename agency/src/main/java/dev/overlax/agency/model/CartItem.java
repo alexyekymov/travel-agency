@@ -11,11 +11,11 @@ import java.math.BigDecimal;
 import java.util.UUID;
 
 @Entity
-@Table(name = "order_item")
+@Table(name = "cart_item")
 @Getter
 @Setter
 @NoArgsConstructor
-public class OrderItem {
+public class CartItem {
 
     @Id
     @Column(name = "id")
@@ -23,8 +23,8 @@ public class OrderItem {
     private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
-    private Order order;
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
     @ManyToOne
     @JoinColumn(name = "tour_id")
@@ -33,10 +33,7 @@ public class OrderItem {
     @Column(name = "reserved_seats")
     private int reservedSeats;
 
-    @Column(name = "unit_price")
-    private BigDecimal unitPrice;
-
     public BigDecimal getLineTotal() {
-        return unitPrice.multiply(BigDecimal.valueOf(reservedSeats));
+        return tour.getPrice().multiply(BigDecimal.valueOf(reservedSeats));
     }
 }
