@@ -6,7 +6,6 @@ CREATE TABLE app_user
     email          VARCHAR(100)             NOT NULL UNIQUE,
     password       VARCHAR(255)             NOT NULL,
     phone_number   VARCHAR(20),
-    role           VARCHAR(20)              NOT NULL,
     account_status BOOLEAN                  NOT NULL DEFAULT TRUE,
     created_at     TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now()
 );
