@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
 <body>
 
 <header th:fragment="header" class="bg-light border-bottom shadow-sm py-4">
@@ -10,11 +10,26 @@
                    class="fs-4 fw-semibold text-success text-decoration-none d-inline-flex align-items-center gap-2">
                     <i class="bi bi-globe-americas"></i>Travel Agency
                 </a>
-                <div class="d-flex gap-2">
-                    <a th:href="@{/auth/sign-in}"
-                       class="btn btn-outline-success text-uppercase fw-semibold">Sign in</a>
-                    <a th:href="@{/auth/sign-up}"
-                       class="btn btn-success text-uppercase fw-semibold">Sign up</a>
+
+                <div class="d-flex align-items-center gap-3">
+                    <span sec:authorize="isAuthenticated()" class="text-muted small">
+                        <i class="bi bi-person-circle"></i>
+                        <span sec:authentication="name">user@example.com</span>
+                    </span>
+
+                    <div sec:authorize="isAnonymous()" class="d-flex gap-2">
+                        <a th:href="@{/auth/sign-in}"
+                           class="btn btn-outline-success text-uppercase fw-semibold">Sign in</a>
+                        <a th:href="@{/auth/sign-up}"
+                           class="btn btn-success text-uppercase fw-semibold">Sign up</a>
+                    </div>
+
+                    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="m-0">
+                        <button type="submit"
+                                class="btn btn-outline-success text-uppercase fw-semibold d-inline-flex align-items-center gap-1">
+                            <i class="bi bi-box-arrow-right"></i>Log out
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
