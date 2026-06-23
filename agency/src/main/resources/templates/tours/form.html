@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>New tour</title>
+    <title th:text="${tourId != null} ? 'Edit tour' : 'New tour'">New tour</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/bootstrap-icons.min.css}" rel="stylesheet">
     <style>
@@ -21,17 +21,20 @@
         <div class="row justify-content-center">
             <div class="col-lg-6">
 
-                <a th:href="@{/}"
+                <a th:href="${tourId != null} ? @{/tours/manage} : @{/}"
                    class="text-uppercase fw-semibold text-success small text-decoration-none mb-4 d-inline-block">&larr;
-                    Back to tours</a>
+                    <span th:text="${tourId != null} ? 'Back to dashboard' : 'Back to tours'">Back to tours</span></a>
 
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4">
 
-                        <p class="text-uppercase fw-semibold text-success small mb-1">New tour</p>
-                        <h1 class="h3 mb-4">Create a tour</h1>
+                        <p class="text-uppercase fw-semibold text-success small mb-1"
+                           th:text="${tourId != null} ? 'Edit tour' : 'New tour'">New tour</p>
+                        <h1 class="h3 mb-4" th:text="${tourId != null} ? 'Update the tour' : 'Create a tour'">Create a
+                            tour</h1>
 
-                        <form th:action="@{/tours}" th:object="${tourRequest}"
+                        <form th:action="${tourId != null} ? @{/tours/{id}(id=${tourId})} : @{/tours}"
+                              th:object="${tourRequest}"
                               method="post" enctype="multipart/form-data" class="row g-3">
 
                             <div class="col-12">
@@ -125,9 +128,11 @@
                             </div>
 
                             <div class="col-12 d-flex gap-2 mt-4">
-                                <button type="submit" class="btn btn-success text-uppercase fw-semibold">Create tour
+                                <button type="submit" class="btn btn-success text-uppercase fw-semibold"
+                                        th:text="${tourId != null} ? 'Save changes' : 'Create tour'">Create tour
                                 </button>
-                                <a th:href="@{/}" class="btn btn-outline-secondary">Cancel</a>
+                                <a th:href="${tourId != null} ? @{/tours/manage} : @{/}"
+                                   class="btn btn-outline-secondary">Cancel</a>
                             </div>
 
                         </form>

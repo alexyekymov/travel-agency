@@ -31,6 +31,16 @@
                         </button>
                     </form>
 
+                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/users}"
+                       class="btn btn-outline-success d-inline-flex align-items-center" title="Users">
+                        <i class="bi bi-people"></i>
+                    </a>
+
+                    <a sec:authorize="hasRole('MANAGER')" th:href="@{/tours/manage}"
+                       class="btn btn-outline-success d-inline-flex align-items-center" title="Dashboard">
+                        <i class="bi bi-speedometer2"></i>
+                    </a>
+
                     <a sec:authorize="isAuthenticated()" th:href="@{/orders}"
                        class="btn btn-outline-success d-inline-flex align-items-center" title="Orders">
                         <i class="bi bi-receipt"></i>
