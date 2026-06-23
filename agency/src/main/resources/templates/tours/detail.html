@@ -5,6 +5,12 @@
     <title th:text="${tour.title}">Tour</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
     <link th:href="@{/css/bootstrap-icons.min.css}" rel="stylesheet">
+    <style>
+        .form-control:focus {
+            border-color: var(--bs-success);
+            box-shadow: 0 0 0 .25rem rgba(var(--bs-success-rgb), .25);
+        }
+    </style>
 </head>
 <body>
 
@@ -62,11 +68,25 @@
                                     </span>
                                 </div>
 
-                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mt-3">
                                     <span class="fs-3 fw-semibold">
                                         <span class="text-muted fs-6">$</span><span th:text="${#numbers.formatInteger(tour.price, 1, 'COMMA')}">1,299</span>
                                     </span>
-                                    <button class="btn btn-success text-uppercase fw-semibold" type="button">Book now</button>
+
+                                    <form th:action="@{/cart/add}" method="post"
+                                          class="d-flex align-items-end gap-2 m-0">
+                                        <input type="hidden" name="tourId" th:value="${tour.id}">
+                                        <div>
+                                            <label for="seats"
+                                                   class="form-label text-uppercase fw-semibold text-success small mb-1">Seats</label>
+                                            <input type="number" id="seats" name="seats" value="1" min="1"
+                                                   class="form-control" style="width: 5rem">
+                                        </div>
+                                        <button type="submit"
+                                                class="btn btn-success text-uppercase fw-semibold d-inline-flex align-items-center gap-2">
+                                            <i class="bi bi-cart-plus"></i>Add to cart
+                                        </button>
+                                    </form>
                                 </div>
 
                             </div>

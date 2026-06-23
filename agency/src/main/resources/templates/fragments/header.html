@@ -26,10 +26,20 @@
 
                     <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="m-0">
                         <button type="submit"
-                                class="btn btn-outline-success text-uppercase fw-semibold d-inline-flex align-items-center gap-1">
-                            <i class="bi bi-box-arrow-right"></i>Log out
+                                class="btn btn-outline-success d-inline-flex align-items-center" title="Log out">
+                            <i class="bi bi-box-arrow-right"></i>
                         </button>
                     </form>
+
+                    <a sec:authorize="isAuthenticated()" th:href="@{/orders}"
+                       class="btn btn-outline-success d-inline-flex align-items-center" title="Orders">
+                        <i class="bi bi-receipt"></i>
+                    </a>
+
+                    <a sec:authorize="isAuthenticated()" th:href="@{/cart}"
+                       class="btn btn-outline-success d-inline-flex align-items-center" title="Cart">
+                        <i class="bi bi-cart3"></i>
+                    </a>
                 </div>
             </div>
         </div>

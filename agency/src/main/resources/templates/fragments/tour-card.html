@@ -28,7 +28,10 @@
     </div>
 
     <div class="card-body d-flex flex-column">
-        <h5 class="card-title mb-1" th:text="${tour.title}">Tour title</h5>
+        <h5 class="card-title mb-1">
+            <a th:href="@{/tours/{id}(id=${tour.id})}"
+               class="stretched-link text-decoration-none text-body" th:text="${tour.title}">Tour title</a>
+        </h5>
         <p class="card-text text-muted small"
            th:text="${#strings.abbreviate(tour.description, 90)}">A short description of the trip.</p>
 
@@ -51,10 +54,15 @@
             1,299
         </span>
         </span>
-        <a th:href="@{/tours/{id}(id=${tour.id})}"
-           class="btn btn-sm btn-outline-success stretched-link text-uppercase fw-semibold">
-            View details
-        </a>
+        <form th:action="@{/cart/add}" method="post" class="m-0 position-relative" style="z-index: 2">
+            <input type="hidden" name="tourId" th:value="${tour.id}">
+            <input type="hidden" name="seats" value="1">
+            <button type="submit"
+                    class="btn btn-sm btn-outline-success d-inline-flex align-items-center"
+                    title="Add to cart">
+                <i class="bi bi-cart-plus fs-5 lh-1"></i>
+            </button>
+        </form>
     </div>
 
 </article>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Your orders</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/css/bootstrap-icons.min.css}" rel="stylesheet">
+</head>
+<body>
+
+<nav th:replace="~{fragments/header :: header}"></nav>
+
+<main class="py-5">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                <a th:href="@{/}"
+                   class="text-uppercase fw-semibold text-success small text-decoration-none mb-4 d-inline-block">&larr;
+                    Back to tours</a>
+
+                <p class="text-uppercase fw-semibold text-success small mb-1">History</p>
+                <h1 class="h2 mb-4">Your orders</h1>
+
+                <div th:if="${orders.isEmpty()}"
+                     class="text-center text-muted border rounded p-5 my-4">
+                    <i class="bi bi-receipt fs-1 d-block mb-3 text-secondary opacity-50"></i>
+                    You haven't placed any orders yet.
+                    <a th:href="@{/}" class="text-success fw-semibold text-decoration-none">Browse tours</a>.
+                </div>
+
+                <div th:each="order : ${orders}" class="card border-0 shadow-sm mb-3">
+                    <div class="card-body">
+
+                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pb-3 border-bottom">
+                            <div>
+                                <span class="text-muted small text-uppercase fw-semibold">Order</span>
+                                <span class="ms-1 small text-muted"
+                                      th:text="${#strings.substring(order.id, 0, 8)}">a1b2c3d4</span>
+                                <div class="text-muted small"
+                                     th:text="${order.createdAt.atZone(T(java.time.ZoneId).systemDefault()).format(T(java.time.format.DateTimeFormatter).ofPattern('dd MMM yyyy, HH:mm'))}">
+                                    23 Jun 2026, 14:30
+                                </div>
+                            </div>
+                            <span class="badge rounded-pill text-uppercase fw-semibold"
+                                  th:classappend="${order.status.name() == 'PAID'} ? 'bg-success-subtle text-success-emphasis border border-success-subtle'
+                                                : (${order.status.name() == 'CANCELED' or order.status.name() == 'EXPIRED'} ? 'bg-danger-subtle text-danger-emphasis border border-danger-subtle'
+                                                : 'bg-warning-subtle text-warning-emphasis border border-warning-subtle')"
+                                  th:text="${order.status}">PAID</span>
+                        </div>
+
+                        <div th:each="item : ${order.items}"
+                             class="d-flex justify-content-between align-items-center gap-2 py-2 small border-bottom">
+                            <span class="text-body" th:text="${item.tour.title}">Tour title</span>
+                            <span class="text-muted">
+                                <span th:text="${item.reservedSeats}">2</span>
+                                &times;
+                                <span class="text-muted">$</span><span
+                                    th:text="${#numbers.formatInteger(item.unitPrice, 1, 'COMMA')}">1,299</span>
+                                <span class="fw-semibold text-body ms-2">
+                                    <span class="text-muted">$</span><span
+                                        th:text="${#numbers.formatInteger(item.lineTotal, 1, 'COMMA')}">2,598</span>
+                                </span>
+                            </span>
+                        </div>
+
+                        <div class="text-end pt-3 fs-5">
+                            Total:
+                            <span class="fw-semibold">
+                                <span class="text-muted fs-6">$</span><span
+                                    th:text="${#numbers.formatInteger(order.totalPrice, 1, 'COMMA')}">3,897</span>
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
