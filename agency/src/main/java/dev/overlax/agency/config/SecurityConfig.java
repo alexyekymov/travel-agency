@@ -1,9 +1,11 @@
 package dev.overlax.agency.config;
 
 import dev.overlax.agency.repository.UserRepository;
+import dev.overlax.agency.security.CookieUtil;
 import dev.overlax.agency.security.JwtTokenFilter;
 import dev.overlax.agency.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -26,13 +28,11 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-//@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final UserRepository userRepository;
     private final ApplicationContext applicationContext;
     private final JwtTokenProvider tokenProvider;
-//    @Qualifier("handlerExceptionResolver")
     private final HandlerExceptionResolver resolver;
 
     public SecurityConfig(UserRepository userRepository, ApplicationContext applicationContext, JwtTokenProvider tokenProvider, @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
@@ -60,7 +60,9 @@ public class SecurityConfig {
                         new LoginUrlAuthenticationEntryPoint("/auth/sign-in")))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .deleteCookies(JwtTokenFilter.ACCESS_TOKEN_COOKIE, JwtTokenFilter.REFRESH_TOKEN_COOKIE)
+                        .deleteCookies(JwtTokenFilter.ACCESS_TOKEN_COOKIE)
+                        .addLogoutHandler((request, response, auth) ->
+                                response.addHeader(HttpHeaders.SET_COOKIE, CookieUtil.expiredRefresh().toString()))
                         .logoutSuccessUrl("/auth/sign-in?logout"))
                 .sessionManagement(sessionManager ->
                         sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

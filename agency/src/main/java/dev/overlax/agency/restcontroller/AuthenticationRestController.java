@@ -1,6 +1,7 @@
 package dev.overlax.agency.restcontroller;
 
 import dev.overlax.agency.dto.UserDTO;
+import dev.overlax.agency.security.CookieUtil;
 import dev.overlax.agency.security.JwtProperties;
 import dev.overlax.agency.security.JwtTokenFilter;
 import dev.overlax.agency.security.JwtTokenProvider;
@@ -10,7 +11,6 @@ import dev.overlax.agency.service.UserService;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -63,36 +63,14 @@ public class AuthenticationRestController {
 
     @PostMapping("/logout")
     public void logout(HttpServletResponse response) {
-        response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie(JwtTokenFilter.ACCESS_TOKEN_COOKIE).toString());
-        response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie(JwtTokenFilter.REFRESH_TOKEN_COOKIE).toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, CookieUtil.expiredAccess().toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, CookieUtil.expiredRefresh().toString());
     }
 
     private void setTokenCookies(HttpServletResponse response, String accessToken, String refreshToken) {
         response.addHeader(HttpHeaders.SET_COOKIE,
-                buildCookie(JwtTokenFilter.ACCESS_TOKEN_COOKIE, accessToken,
-                        Duration.ofHours(jwtProperties.getAccess())).toString());
+                CookieUtil.access(accessToken, Duration.ofHours(jwtProperties.getAccess())).toString());
         response.addHeader(HttpHeaders.SET_COOKIE,
-                buildCookie(JwtTokenFilter.REFRESH_TOKEN_COOKIE, refreshToken,
-                        Duration.ofDays(jwtProperties.getRefresh())).toString());
-    }
-
-    private ResponseCookie buildCookie(String name, String value, Duration maxAge) {
-        return ResponseCookie.from(name, value)
-                .httpOnly(true)
-                .secure(false) // true?
-                .sameSite("Strict")
-                .path("/")
-                .maxAge(maxAge)
-                .build();
-    }
-
-    private ResponseCookie expiredCookie(String name) {
-        return ResponseCookie.from(name, "")
-                .httpOnly(true)
-                .secure(false) // true?
-                .sameSite("Strict")
-                .path("/")
-                .maxAge(0)
-                .build();
+                CookieUtil.refresh(refreshToken, Duration.ofDays(jwtProperties.getRefresh())).toString());
     }
 }
