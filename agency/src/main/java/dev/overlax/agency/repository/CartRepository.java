@@ -1,6 +1,6 @@
 package dev.overlax.agency.repository;
 
-import dev.overlax.agency.model.User;
+import dev.overlax.agency.model.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,9 +8,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface CartRepository extends JpaRepository<Cart, UUID> {
 
-    Optional<User> findByEmailIgnoreCase(String email);
-
-    boolean existsByEmailIgnoreCase(String email);
+    Optional<Cart> findByUser_Id(UUID userId);
 }
