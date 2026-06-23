@@ -7,11 +7,13 @@ import dev.overlax.agency.mapper.UserToDtoMapper;
 import dev.overlax.agency.model.User;
 import dev.overlax.agency.model.type.Role;
 import dev.overlax.agency.repository.UserRepository;
+import dev.overlax.agency.security.AuthUser;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -89,6 +91,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public void blockUser(UUID id) {
+        if (id.equals(currentUserId())) {
+            throw new IllegalStateException("You cannot block your own account");
+        }
         find(id).setActive(false);
     }
 
@@ -103,7 +108,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public void changeRoles(UUID id, Set<Role> roles) {
+        if (id.equals(currentUserId())) {
+            throw new IllegalStateException("You cannot change your own roles");
+        }
         find(id).setRoles(roles.isEmpty() ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles));
+    }
+
+    private UUID currentUserId() {
+        return ((AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
     }
 
     private User find(UUID id) {
