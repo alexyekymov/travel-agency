@@ -82,7 +82,19 @@
                                 </td>
 
                                 <td class="text-end pe-3">
-                                    <a th:href="@{/tours/{id}/edit(id=${tour.id})}"
+                                    <form sec:authorize="hasRole('MANAGER')"
+                                          th:action="@{/tours/{id}/hot(id=${tour.id})}" method="post"
+                                          class="m-0 d-inline-block">
+                                        <input type="checkbox" class="btn-check" autocomplete="off"
+                                               th:id="${'hot-' + tour.id}" th:checked="${tour.hot}"
+                                               onchange="this.form.submit()">
+                                        <label class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1 text-uppercase fw-semibold"
+                                               th:for="${'hot-' + tour.id}">
+                                            <i class="bi bi-fire"></i>Hot
+                                        </label>
+                                    </form>
+
+                                    <a sec:authorize="hasRole('ADMIN')" th:href="@{/tours/{id}/edit(id=${tour.id})}"
                                        class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1 text-uppercase fw-semibold">
                                         <i class="bi bi-pencil"></i>Edit
                                     </a>
