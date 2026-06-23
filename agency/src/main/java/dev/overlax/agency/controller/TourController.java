@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.UUID;
 
 @Controller
-@RequestMapping
+@RequestMapping("/tours")
 @RequiredArgsConstructor
 public class TourController {
 
@@ -59,14 +59,14 @@ public class TourController {
         return "tours/detail";
     }
 
-    @GetMapping("/tours/new")
+    @GetMapping("/new")
     public String newForm(@ModelAttribute TourRequest tourRequest) {
         return "tours/form";
     }
 
-    @PostMapping("/tours")
+    @PostMapping
     public String create(@ModelAttribute TourRequest tourRequest) {
         TourResponse created = tourService.create(tourRequest);
-        return "redirect:/" + created.id();
+        return "redirect:/tours/" + created.id();
     }
 }
