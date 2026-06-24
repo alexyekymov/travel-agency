@@ -1,4 +1,4 @@
-package dev.overlax.agency.restcontroller;
+package dev.overlax.agency.controller.rest;
 
 import dev.overlax.agency.dto.UserDTO;
 import dev.overlax.agency.security.CookieUtil;
