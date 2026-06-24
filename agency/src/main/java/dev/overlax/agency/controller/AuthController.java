@@ -6,7 +6,6 @@ import dev.overlax.agency.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,8 +25,7 @@ public class AuthController {
     }
 
     @GetMapping("/sign-up")
-    public String signUpForm(Model model) {
-        model.addAttribute("registerRequest", new RegisterRequest(null, null, null, null, null));
+    public String signUpForm(@ModelAttribute("registerRequest") RegisterRequest request) {
         return "auth/sign-up";
     }
 
