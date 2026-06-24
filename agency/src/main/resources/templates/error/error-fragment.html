@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html th:fragment="layout(heading, message)" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${heading}">Error</title>
+    <th:block th:replace="~{fragments/head :: assets}"></th:block>
+</head>
+<body>
+
+<nav th:replace="~{fragments/header :: header}"></nav>
+
+<main class="py-5">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 text-center py-5">
+                <p th:if="${status != null}" class="display-1 fw-semibold text-success mb-2" th:text="${status}">404</p>
+                <h1 class="h3 mb-2" th:text="${heading}">Something went wrong</h1>
+                <p class="text-muted mb-4" th:text="${message}">Please try again.</p>
+                <a th:href="@{/}" class="btn btn-success text-uppercase fw-semibold"
+                   th:text="#{error.backHome}">Back to home</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>
