@@ -29,6 +29,7 @@ spring:
 logging:
   level:
     dev.overlax.agency.aspect: DEBUG
+    dev.overlax.agency.service: DEBUG
 
 app:
   upload-dir: ${APP_UPLOAD_DIR:${user.home}/travel-agency-uploads}

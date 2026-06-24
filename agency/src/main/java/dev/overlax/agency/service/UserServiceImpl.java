@@ -10,6 +10,7 @@ import dev.overlax.agency.repository.UserRepository;
 import dev.overlax.agency.security.AuthUser;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,6 +24,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -35,6 +37,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO register(RegisterRequest request) {
         if (repository.existsByEmailIgnoreCase(request.email())) {
+            log.warn("Registration rejected, email already in use: {}", request.email());
             throw new EmailAlreadyExistsException(
                     String.format("User with email: %s already exists", request.email()));
         }
@@ -49,11 +52,14 @@ public class UserServiceImpl implements UserService {
         user.setRoles(EnumSet.of(Role.USER));
         user.setActive(true);
 
-        return mapper.toDto(repository.save(user));
+        User saved = repository.save(user);
+        log.info("New user registered: id={}, email={}", saved.getId(), saved.getEmail());
+        return mapper.toDto(saved);
     }
 
     @Override
     public UserDTO getUserByEmail(String email) {
+        log.debug("Looking up user by email: {}", email);
         return repository.findByEmailIgnoreCase(email)
                 .map(mapper::toDto)
                 .orElseThrow(
@@ -92,9 +98,11 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("hasRole('ADMIN')")
     public void blockUser(UUID id) {
         if (id.equals(currentUserId())) {
+            log.warn("Self-block attempt rejected for user {}", id);
             throw new IllegalStateException("You cannot block your own account");
         }
         find(id).setActive(false);
+        log.info("User blocked: {}", id);
     }
 
     @Override
@@ -102,6 +110,7 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("hasRole('ADMIN')")
     public void unblockUser(UUID id) {
         find(id).setActive(true);
+        log.info("User unblocked: {}", id);
     }
 
     @Override
@@ -109,9 +118,11 @@ public class UserServiceImpl implements UserService {
     @PreAuthorize("hasRole('ADMIN')")
     public void changeRoles(UUID id, Set<Role> roles) {
         if (id.equals(currentUserId())) {
+            log.warn("Self role-change attempt rejected for user {}", id);
             throw new IllegalStateException("You cannot change your own roles");
         }
         find(id).setRoles(roles.isEmpty() ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles));
+        log.info("Roles changed for user {}: {}", id, roles);
     }
 
     private UUID currentUserId() {

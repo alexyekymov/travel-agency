@@ -9,6 +9,7 @@ import dev.overlax.agency.repository.CartRepository;
 import dev.overlax.agency.repository.OrderRepository;
 import dev.overlax.agency.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class OrderService {
@@ -28,7 +30,10 @@ public class OrderService {
     public Order checkout(UUID userId) {
         Cart cart = cartRepository.findByUser_Id(userId)
                 .filter(c -> !c.getItems().isEmpty())
-                .orElseThrow(() -> new IllegalStateException("Cart is empty"));
+                .orElseThrow(() -> {
+                    log.warn("Checkout rejected, empty cart for user {}", userId);
+                    return new IllegalStateException("Cart is empty");
+                });
 
         Order order = new Order();
         order.setUser(userRepository.getReferenceById(userId));
@@ -48,11 +53,13 @@ public class OrderService {
 
         Order saved = orderRepository.save(order);
         cart.getItems().clear();
+        log.info("Order placed: id={}, user={}, total={}", saved.getId(), userId, saved.getTotalPrice());
         return saved;
     }
 
     @Transactional(readOnly = true)
     public List<Order> getOrders(UUID userId) {
+        log.debug("Fetching orders for user {}", userId);
         return orderRepository.findByUser_IdOrderByCreatedAtDesc(userId);
     }
 }
