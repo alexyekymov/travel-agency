@@ -98,6 +98,15 @@
                                        class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1  fw-semibold">
                                         <i class="bi bi-pencil"></i><span th:text="#{manager.edit}">Edit</span>
                                     </a>
+
+                                    <form sec:authorize="hasRole('ADMIN')" th:action="@{/tours/{id}/delete(id=${tour.id})}"
+                                          method="post" class="m-0 d-inline-block">
+                                        <button type="submit"
+                                                class="btn btn-sm btn-outline-danger d-inline-flex align-items-center"
+                                                th:title="#{manager.delete}">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
                                 </td>
 
                             </tr>
