@@ -7,11 +7,13 @@ import dev.overlax.agency.model.type.HotelType;
 import dev.overlax.agency.model.type.TourType;
 import dev.overlax.agency.model.type.TransferType;
 import dev.overlax.agency.service.TourService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -65,7 +67,10 @@ public class TourController {
     }
 
     @PostMapping
-    public String create(@ModelAttribute TourRequest tourRequest) {
+    public String create(@Valid @ModelAttribute TourRequest tourRequest, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "tours/form";
+        }
         TourResponse created = tourService.create(tourRequest);
         return "redirect:/tours/" + created.id();
     }
@@ -87,7 +92,12 @@ public class TourController {
     }
 
     @PostMapping("/{id}")
-    public String update(@PathVariable UUID id, @ModelAttribute TourRequest tourRequest) {
+    public String update(@PathVariable UUID id, @Valid @ModelAttribute TourRequest tourRequest,
+                         BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("tourId", id);
+            return "tours/form";
+        }
         tourService.update(id, tourRequest);
         return "redirect:/tours/manage";
     }

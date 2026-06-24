@@ -5,6 +5,11 @@ spring:
   application:
     name: agency
 
+  messages:
+    basename: messages
+    encoding: UTF-8
+    fallback-to-system-locale: false
+
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5432/travel-agency}
     driver-class-name: org.postgresql.Driver
