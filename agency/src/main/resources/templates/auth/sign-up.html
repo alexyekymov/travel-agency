@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sign up</title>
+    <title th:text="#{nav.signUp}">Sign up</title>
     <th:block th:replace="~{fragments/head :: assets}"></th:block>
     <style>
         .form-control:focus {
@@ -20,40 +20,35 @@
         <div class="row justify-content-center">
             <div class="col-md-7 col-lg-5">
 
-                <a th:href="@{/}"
-                   class="text-uppercase fw-semibold text-success small text-decoration-none mb-4 d-inline-block">&larr;
-                    Back to tours</a>
-
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4">
 
-                        <p class="text-uppercase fw-semibold text-success small mb-1">Join us</p>
-                        <h1 class="h3 mb-4">Create your account</h1>
+                        <h1 class="h3 mb-4" th:text="#{auth.createAccount}">Create your account</h1>
 
                         <form th:action="@{/auth/sign-up}" th:object="${registerRequest}" method="post"
                               class="row g-3" novalidate>
 
                             <div class="col-12 col-sm-6">
                                 <label for="firstName"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">First
+                                       class="form-label text-case fw-semibold text-success small mb-1" th:text="#{auth.firstName}">First
                                     name</label>
                                 <input type="text" id="firstName" th:field="*{firstName}" class="form-control"
-                                       th:errorclass="is-invalid" placeholder="Jane" autocomplete="given-name" required>
+                                       th:errorclass="is-invalid" th:placeholder="#{auth.firstNamePlaceholder}" placeholder="Jane" autocomplete="given-name" required>
                                 <div class="invalid-feedback" th:errors="*{firstName}">First name is required.</div>
                             </div>
 
                             <div class="col-12 col-sm-6">
                                 <label for="lastName"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Last
+                                       class="form-label text-case fw-semibold text-success small mb-1" th:text="#{auth.lastName}">Last
                                     name</label>
                                 <input type="text" id="lastName" th:field="*{lastName}" class="form-control"
-                                       th:errorclass="is-invalid" placeholder="Doe" autocomplete="family-name" required>
+                                       th:errorclass="is-invalid" th:placeholder="#{auth.lastNamePlaceholder}" placeholder="Doe" autocomplete="family-name" required>
                                 <div class="invalid-feedback" th:errors="*{lastName}">Last name is required.</div>
                             </div>
 
                             <div class="col-12">
                                 <label for="email"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Email</label>
+                                       class="form-label text-case fw-semibold text-success small mb-1" th:text="#{auth.email}">Email</label>
                                 <input type="email" id="email" th:field="*{email}" class="form-control"
                                        th:errorclass="is-invalid" placeholder="you@example.com" autocomplete="email"
                                        required>
@@ -62,20 +57,20 @@
 
                             <div class="col-12">
                                 <label for="password"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Password</label>
+                                       class="form-label text-case fw-semibold text-success small mb-1" th:text="#{auth.password}">Password</label>
                                 <input type="password" id="password" th:field="*{password}" class="form-control"
-                                       th:errorclass="is-invalid" placeholder="At least 8 characters"
+                                       th:errorclass="is-invalid" th:placeholder="#{auth.passwordHint}" placeholder="At least 8 characters"
                                        autocomplete="new-password" required>
                                 <div class="invalid-feedback" th:errors="*{password}">
                                     Password must be at least 8 characters.
                                 </div>
-                                <div class="form-text">Use 8 or more characters.</div>
+                                <div class="form-text" th:text="#{auth.passwordHelp}">Use 8 or more characters.</div>
                             </div>
 
                             <div class="col-12">
                                 <label for="phoneNumber"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">
-                                    Phone number <span class="text-muted text-lowercase fw-normal">(optional)</span>
+                                       class="form-label text-case fw-semibold text-success small mb-1">
+                                    <span th:text="#{auth.phoneNumber}">Phone number</span> <span class="text-muted text-lowercase fw-normal" th:text="#{auth.optional}">(optional)</span>
                                 </label>
                                 <input type="tel" id="phoneNumber" th:field="*{phoneNumber}" class="form-control"
                                        th:errorclass="is-invalid" placeholder="+1 555 123 4567" autocomplete="tel">
@@ -83,16 +78,16 @@
                             </div>
 
                             <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-success text-uppercase fw-semibold w-100">Sign up
+                                <button type="submit" class="btn btn-success text-uppercase fw-semibold w-100" th:text="#{nav.signUp}">Sign up
                                 </button>
                             </div>
 
                         </form>
 
                         <p class="text-muted small text-center mb-0 mt-4">
-                            Already have an account?
+                            <span th:text="#{auth.haveAccount}">Already have an account?</span>
                             <a th:href="@{/auth/sign-in}"
-                               class="text-success fw-semibold text-decoration-none">Sign in</a>
+                               class="text-success fw-semibold text-decoration-none" th:text="#{nav.signIn}">Sign in</a>
                         </p>
 
                     </div>

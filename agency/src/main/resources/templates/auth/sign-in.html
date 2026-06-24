@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Sign in</title>
+    <title th:text="#{nav.signIn}">Sign in</title>
     <th:block th:replace="~{fragments/head :: assets}"></th:block>
     <style>
         .form-control:focus {
@@ -20,19 +20,15 @@
         <div class="row justify-content-center">
             <div class="col-md-6 col-lg-4">
 
-                <a th:href="@{/}"
-                   class="text-uppercase fw-semibold text-success small text-decoration-none mb-4 d-inline-block">&larr;
-                    Back to tours</a>
 
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4">
 
-                        <p class="text-uppercase fw-semibold text-success small mb-1">Welcome back</p>
-                        <h1 class="h3 mb-4">Sign in</h1>
+                        <h1 class="h3 mb-4" th:text="#{nav.signIn}">Sign in</h1>
 
                         <div id="error" class="alert alert-danger d-flex align-items-center gap-2 d-none">
                             <i class="bi bi-exclamation-circle"></i>
-                            <span>Invalid email or password.</span>
+                            <span th:text="#{auth.invalidCredentials}">Invalid email or password.</span>
                         </div>
 
                         <form id="loginForm" class="row g-3" novalidate
@@ -41,28 +37,28 @@
 
                             <div class="col-12">
                                 <label for="username"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Email</label>
+                                       class="form-label fw-semibold text-success small mb-1" th:text="#{auth.email}">Email</label>
                                 <input type="email" id="username" name="username" class="form-control"
                                        placeholder="you@example.com" autocomplete="username" required>
                             </div>
 
                             <div class="col-12">
                                 <label for="password"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Password</label>
+                                       class="form-label fw-semibold text-success small mb-1" th:text="#{auth.password}">Password</label>
                                 <input type="password" id="password" name="password" class="form-control"
-                                       placeholder="Your password" autocomplete="current-password" required>
+                                       th:placeholder="#{auth.passwordPlaceholder}" placeholder="Your password" autocomplete="current-password" required>
                             </div>
 
                             <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-success text-uppercase fw-semibold w-100">Sign in
+                                <button type="submit" class="btn btn-success text-uppercase fw-semibold w-100" th:text="#{nav.signIn}">Sign in
                                 </button>
                             </div>
 
                         </form>
 
                         <p class="text-muted small text-center mb-0 mt-4">
-                            Don't have an account?
-                            <a th:href="@{/auth/sign-up}" class="text-success fw-semibold text-decoration-none">Sign up</a>
+                            <span th:text="#{auth.noAccount}">Don't have an account?</span>
+                            <a th:href="@{/auth/sign-up}" class="text-success fw-semibold text-decoration-none" th:text="#{nav.signUp}">Sign up</a>
                         </p>
 
                     </div>

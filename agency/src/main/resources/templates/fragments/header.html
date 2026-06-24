@@ -17,43 +17,49 @@
                         <span sec:authentication="name">user@example.com</span>
                     </span>
 
+                    <select id="langSelect" class="form-select form-select-sm w-auto">
+                        <option value="en" th:selected="${#locale.language == 'en'}">EN</option>
+                        <option value="uk" th:selected="${#locale.language == 'uk'}">UA</option>
+                    </select>
+
                     <div sec:authorize="isAnonymous()" class="d-flex gap-2">
                         <a th:href="@{/auth/sign-in}"
-                           class="btn btn-outline-success text-uppercase fw-semibold">Sign in</a>
+                           class="btn btn-outline-success  fw-semibold" th:text="#{nav.signIn}">Sign in</a>
                         <a th:href="@{/auth/sign-up}"
-                           class="btn btn-success text-uppercase fw-semibold">Sign up</a>
+                           class="btn btn-success  fw-semibold" th:text="#{nav.signUp}">Sign up</a>
                     </div>
 
                     <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="m-0">
                         <button type="submit"
-                                class="btn btn-outline-success d-inline-flex align-items-center" title="Log out">
+                                class="btn btn-outline-success d-inline-flex align-items-center" th:title="#{nav.logout}" title="Log out">
                             <i class="bi bi-box-arrow-right"></i>
                         </button>
                     </form>
 
                     <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/users}"
-                       class="btn btn-outline-success d-inline-flex align-items-center" title="Users">
+                       class="btn btn-outline-success d-inline-flex align-items-center" th:title="#{nav.users}" title="Users">
                         <i class="bi bi-people"></i>
                     </a>
 
                     <a sec:authorize="hasRole('MANAGER')" th:href="@{/tours/manage}"
-                       class="btn btn-outline-success d-inline-flex align-items-center" title="Dashboard">
+                       class="btn btn-outline-success d-inline-flex align-items-center" th:title="#{nav.dashboard}" title="Dashboard">
                         <i class="bi bi-speedometer2"></i>
                     </a>
 
                     <a sec:authorize="isAuthenticated()" th:href="@{/orders}"
-                       class="btn btn-outline-success d-inline-flex align-items-center" title="Orders">
+                       class="btn btn-outline-success d-inline-flex align-items-center" th:title="#{nav.orders}" title="Orders">
                         <i class="bi bi-receipt"></i>
                     </a>
 
                     <a sec:authorize="isAuthenticated()" th:href="@{/cart}"
-                       class="btn btn-outline-success d-inline-flex align-items-center" title="Cart">
+                       class="btn btn-outline-success d-inline-flex align-items-center" th:title="#{nav.cart}" title="Cart">
                         <i class="bi bi-cart3"></i>
                     </a>
                 </div>
             </div>
         </div>
     </div>
+    <script th:src="@{/js/lang.js}"></script>
 </header>
 
 </body>

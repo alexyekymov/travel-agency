@@ -11,19 +11,20 @@
                  th:src="@{/images/{name}(name=${tour.imageName})}"
                  th:alt="${tour.title}">
             <div th:unless="${tour.imageName != null}"
-                 class="d-flex align-items-center justify-content-center bg-body-secondary text-muted small">
+                 class="d-flex align-items-center justify-content-center bg-body-secondary text-muted small"
+                 th:text="#{card.noPhoto}">
                 No photo
             </div>
         </div>
 
         <span class="badge text-bg-light border position-absolute top-0 start-0 m-2 text-uppercase fw-semibold"
-              th:text="${tour.tourType}">
+              th:text="#{|enum.tourType.${tour.tourType}|}">
             Leisure
         </span>
 
         <span th:if="${tour.hot}"
               class="badge text-bg-danger position-absolute top-0 end-0 m-2 d-inline-flex align-items-center gap-1 text-uppercase fw-semibold">
-            <i class="bi bi-fire"></i>Hot
+            <i class="bi bi-fire"></i><span th:text="#{card.hot}">Hot</span>
         </span>
     </div>
 
@@ -42,7 +43,7 @@
                     &#9733;
                 </span>
             </span>
-            <span th:text="${#strings.capitalizeWords(#strings.replace(#strings.toLowerCase(tour.transferType), '_', ' '))}">
+            <span th:text="#{|enum.transferType.${tour.transferType}|}">
                 Plane
             </span>
         </div>
@@ -59,7 +60,7 @@
             <input type="hidden" name="seats" value="1">
             <button type="submit"
                     class="btn btn-sm btn-outline-success d-inline-flex align-items-center"
-                    title="Add to cart">
+                    th:title="#{card.addToCart}" title="Add to cart">
                 <i class="bi bi-cart-plus fs-5 lh-1"></i>
             </button>
         </form>

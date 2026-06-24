@@ -21,7 +21,7 @@
             <div class="col-lg-8">
 
                 <a th:href="@{/}" class="text-uppercase fw-semibold text-success small text-decoration-none mb-4 d-inline-block">
-                    &larr; Back to tours
+                    &larr; <span th:text="#{detail.back}">Back to tours</span>
                 </a>
 
                 <article class="card border-0 shadow-sm overflow-hidden">
@@ -34,7 +34,8 @@
                                      th:src="@{/images/{name}(name=${tour.imageName})}"
                                      th:alt="${tour.title}">
                                 <div th:unless="${tour.imageName != null}"
-                                     class="d-flex align-items-center justify-content-center bg-body-secondary text-muted small">
+                                     class="d-flex align-items-center justify-content-center bg-body-secondary text-muted small"
+                                     th:text="#{card.noPhoto}">
                                     No photo
                                 </div>
                             </div>
@@ -43,27 +44,27 @@
                         <div class="col-md-5">
                             <div class="card-body d-flex flex-column h-100 p-4">
 
-                                <p class="text-uppercase fw-semibold text-success small mb-1">Tour details</p>
+                                <p class=" fw-semibold text-success small mb-1" th:text="#{detail.label}">Tour details</p>
                                 <h1 class="h3 mb-3" th:text="${tour.title}">Tour title</h1>
                                 <p class="text-muted" th:text="${tour.description}">A short description of the trip.</p>
 
                                 <div class="d-flex flex-wrap gap-2 mt-auto pt-3 border-top">
-                                    <span class="badge rounded-pill bg-success-subtle text-success-emphasis border border-success-subtle d-inline-flex align-items-center gap-1 fw-semibold text-uppercase">
+                                    <span class="badge rounded-pill bg-success-subtle text-success-emphasis border border-success-subtle d-inline-flex align-items-center gap-1 fw-semibold ">
                                         <i class="bi bi-compass"></i>
-                                        <span th:text="${#strings.capitalizeWords(#strings.replace(#strings.toLowerCase(tour.tourType), '_', ' '))}">Leisure</span>
+                                        <span th:text="#{|enum.tourType.${tour.tourType}|}">Leisure</span>
                                     </span>
-                                    <span class="badge rounded-pill bg-success-subtle text-success-emphasis border border-success-subtle d-inline-flex align-items-center gap-1 fw-semibold text-uppercase">
+                                    <span class="badge rounded-pill bg-success-subtle text-success-emphasis border border-success-subtle d-inline-flex align-items-center gap-1 fw-semibold ">
                                         <i class="bi bi-building"></i>
-                                        <span th:text="${#strings.capitalizeWords(#strings.replace(#strings.toLowerCase(tour.hotelType), '_', ' '))}">Four Stars</span>
+                                        <span th:text="#{|enum.hotelType.${tour.hotelType}|}">Four Stars</span>
                                     </span>
-                                    <span class="badge rounded-pill bg-success-subtle text-success-emphasis border border-success-subtle d-inline-flex align-items-center gap-1 fw-semibold text-uppercase">
+                                    <span class="badge rounded-pill bg-success-subtle text-success-emphasis border border-success-subtle d-inline-flex align-items-center gap-1 fw-semibold ">
                                         <i class="bi bi-signpost-split"></i>
-                                        <span th:text="${#strings.capitalizeWords(#strings.replace(#strings.toLowerCase(tour.transferType), '_', ' '))}">Plane</span>
+                                        <span th:text="#{|enum.transferType.${tour.transferType}|}">Plane</span>
                                     </span>
                                     <span th:if="${tour.hot}"
-                                          class="badge rounded-pill text-bg-danger d-inline-flex align-items-center gap-1 fw-semibold text-uppercase">
+                                          class="badge rounded-pill text-bg-danger d-inline-flex align-items-center gap-1 fw-semibold ">
                                         <i class="bi bi-fire"></i>
-                                        <span>Hot</span>
+                                        <span th:text="#{card.hot}">Hot</span>
                                     </span>
                                 </div>
 
@@ -77,13 +78,13 @@
                                         <input type="hidden" name="tourId" th:value="${tour.id}">
                                         <div>
                                             <label for="seats"
-                                                   class="form-label text-uppercase fw-semibold text-success small mb-1">Seats</label>
+                                                   class="form-label  fw-semibold text-success small mb-1" th:text="#{detail.seats}">Seats</label>
                                             <input type="number" id="seats" name="seats" value="1" min="1"
                                                    class="form-control" style="width: 5rem">
                                         </div>
                                         <button type="submit"
-                                                class="btn btn-success text-uppercase fw-semibold d-inline-flex align-items-center gap-2">
-                                            <i class="bi bi-cart-plus"></i>Add to cart
+                                                class="btn btn-success  fw-semibold d-inline-flex align-items-center gap-2">
+                                            <i class="bi bi-cart-plus"></i><span th:text="#{card.addToCart}">Add to cart</span>
                                         </button>
                                     </form>
                                 </div>

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Travel Agency</title>
+    <title th:text="#{index.title}">Travel Agency</title>
     <th:block th:replace="~{fragments/head :: assets}"></th:block>
     <style>
         .sort-select:focus {
@@ -21,8 +21,8 @@
             <div class="col-lg-8">
 
                 <header class="mb-4 mb-lg-5">
-                    <h1 class="h2 mb-2">Featured Tours</h1>
-                    <p class="text-muted mb-0">Hand-picked destinations, ready when you are.</p>
+                    <h1 class="h2 mb-2" th:text="#{index.heading}">Featured Tours</h1>
+                    <p class="text-muted mb-0" th:text="#{index.subheading}">Hand-picked destinations, ready when you are.</p>
                 </header>
 
                 <form method="get" th:action="@{/}"
@@ -34,71 +34,74 @@
                     <!-- filters -->
                     <div class="d-flex flex-wrap align-items-end gap-2">
                         <div>
-                            <label for="tourType" class="form-label text-uppercase fw-semibold text-success small mb-1">Tour
-                                type</label>
+                            <label for="tourType" class="form-label  fw-semibold text-success small mb-1"
+                                   th:text="#{filter.tourType}">Tour type</label>
                             <select id="tourType" name="tourType" class="form-select form-select-sm sort-select w-auto">
-                                <option value="" th:selected="${filterRequest.tourType() == null}">Any</option>
+                                <option value="" th:selected="${filterRequest.tourType() == null}" th:text="#{filter.any}">Any</option>
                                 <option th:each="t : ${tourTypes}" th:value="${t}"
                                         th:selected="${filterRequest.tourType() == t}"
-                                        th:text="${#strings.capitalizeWords(#strings.replace(#strings.toLowerCase(t), '_', ' '))}">
+                                        th:text="#{|enum.tourType.${t}|}">
                                     Leisure
                                 </option>
                             </select>
                         </div>
                         <div>
                             <label for="hotelType"
-                                   class="form-label text-uppercase fw-semibold text-success small mb-1">Hotel</label>
+                                   class="form-label  fw-semibold text-success small mb-1"
+                                   th:text="#{filter.hotel}">Hotel</label>
                             <select id="hotelType" name="hotelType"
                                     class="form-select form-select-sm sort-select w-auto">
-                                <option value="" th:selected="${filterRequest.hotelType() == null}">Any</option>
+                                <option value="" th:selected="${filterRequest.hotelType() == null}" th:text="#{filter.any}">Any</option>
                                 <option th:each="h : ${hotelTypes}" th:value="${h}"
                                         th:selected="${filterRequest.hotelType() == h}"
-                                        th:text="${#strings.capitalizeWords(#strings.replace(#strings.toLowerCase(h), '_', ' '))}">
+                                        th:text="#{|enum.hotelType.${h}|}">
                                     Four Stars
                                 </option>
                             </select>
                         </div>
                         <div>
                             <label for="transferType"
-                                   class="form-label text-uppercase fw-semibold text-success small mb-1">Transfer</label>
+                                   class="form-label  fw-semibold text-success small mb-1"
+                                   th:text="#{filter.transfer}">Transfer</label>
                             <select id="transferType" name="transferType"
                                     class="form-select form-select-sm sort-select w-auto">
-                                <option value="" th:selected="${filterRequest.transferType() == null}">Any</option>
+                                <option value="" th:selected="${filterRequest.transferType() == null}" th:text="#{filter.any}">Any</option>
                                 <option th:each="tr : ${transferTypes}" th:value="${tr}"
                                         th:selected="${filterRequest.transferType() == tr}"
-                                        th:text="${#strings.capitalizeWords(#strings.replace(#strings.toLowerCase(tr), '_', ' '))}">
+                                        th:text="#{|enum.transferType.${tr}|}">
                                     Plane
                                 </option>
                             </select>
                         </div>
                         <div>
-                            <label for="minPrice" class="form-label text-uppercase fw-semibold text-success small mb-1">Min
-                                $</label>
+                            <label for="minPrice" class="form-label  fw-semibold text-success small mb-1"
+                                   th:text="#{filter.minPrice}">Min $</label>
                             <input type="number" step="0.01" min="0" id="minPrice" name="minPrice"
                                    th:value="${filterRequest.minPrice()}" placeholder="0"
                                    class="form-control form-control-sm sort-select" style="width: 6rem">
                         </div>
                         <div>
-                            <label for="maxPrice" class="form-label text-uppercase fw-semibold text-success small mb-1">Max
-                                $</label>
+                            <label for="maxPrice" class="form-label  fw-semibold text-success small mb-1"
+                                   th:text="#{filter.maxPrice}">Max $</label>
                             <input type="number" step="0.01" min="0" id="maxPrice" name="maxPrice"
-                                   th:value="${filterRequest.maxPrice()}" placeholder="Any"
+                                   th:value="${filterRequest.maxPrice()}" th:placeholder="#{filter.any}" placeholder="Any"
                                    class="form-control form-control-sm sort-select" style="width: 6rem">
                         </div>
                         <div>
                             <input type="checkbox" class="btn-check" name="hot" value="true" id="hot"
                                    autocomplete="off" th:checked="${filterRequest.hot()}">
-                            <label class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1 text-uppercase fw-semibold"
+                            <label class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1  fw-semibold"
                                    for="hot">
-                                <i class="bi bi-fire"></i> Hot
+                                <i class="bi bi-fire"></i> <span th:text="#{filter.hot}">Hot</span>
                             </label>
                         </div>
                         <div class="d-flex gap-2">
-                            <button type="submit" class="btn btn-sm btn-success">
-                                Apply
+                            <button type="submit"
+                                    class="btn btn-sm btn-success d-inline-flex align-items-center gap-1">
+                                <i class="bi bi-check-lg"></i><span th:text="#{filter.apply}">Apply</span>
                             </button>
                             <a th:href="@{/(sort=${sort != '' ? sort : null})}"
-                               class="btn btn-sm btn-outline-secondary">
+                               class="btn btn-sm btn-outline-secondary" th:text="#{filter.clear}">
                                 Clear
                             </a>
                         </div>
@@ -106,24 +109,24 @@
 
                     <!-- sort -->
                     <div>
-                        <label for="sort" class="form-label text-uppercase fw-semibold text-success small mb-1">Sort
-                            by</label>
+                        <label for="sort" class="form-label  fw-semibold text-success small mb-1"
+                               th:text="#{sort.label}">Sort by</label>
                         <select id="sort" name="sort" class="form-select form-select-sm sort-select w-auto"
                                 onchange="this.form.submit()">
-                            <option value="" th:selected="${sort == ''}">
+                            <option value="" th:selected="${sort == ''}" th:text="#{sort.default}">
                                 Default
                             </option>
-                            <option value="price,asc" th:selected="${sort == 'price,asc'}">
-                                Price — low to high
+                            <option value="price,asc" th:selected="${sort == 'price,asc'}" th:text="#{sort.priceAsc}">
+                                Price: low to high
                             </option>
-                            <option value="price,desc" th:selected="${sort == 'price,desc'}">
-                                Price — high to low
+                            <option value="price,desc" th:selected="${sort == 'price,desc'}" th:text="#{sort.priceDesc}">
+                                Price: high to low
                             </option>
-                            <option value="title,asc" th:selected="${sort == 'title,asc'}">
-                                Name (A–Z)
+                            <option value="title,asc" th:selected="${sort == 'title,asc'}" th:text="#{sort.nameAsc}">
+                                Name: A–Z
                             </option>
-                            <option value="title,desc" th:selected="${sort == 'title,desc'}">
-                                Name (Z–A)
+                            <option value="title,desc" th:selected="${sort == 'title,desc'}" th:text="#{sort.nameDesc}">
+                                Name: Z–A
                             </option>
                         </select>
                     </div>
@@ -135,7 +138,8 @@
                     </div>
                 </div>
 
-                <div th:if="${tours.isEmpty()}" class="text-center text-muted border rounded p-5 my-4">
+                <div th:if="${tours.isEmpty()}" class="text-center text-muted border rounded p-5 my-4"
+                     th:text="#{tours.empty}">
                     No tours available yet.
                 </div>
 

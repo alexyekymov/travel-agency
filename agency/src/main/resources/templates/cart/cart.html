@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Your cart</title>
+    <title th:text="#{cart.title}">Your cart</title>
     <th:block th:replace="~{fragments/head :: assets}"></th:block>
 </head>
 <body>
@@ -16,9 +16,9 @@
 
                 <a th:href="@{/}"
                    class="text-uppercase fw-semibold text-success small text-decoration-none mb-4 d-inline-block">&larr;
-                    Back to tours</a>
+                    <span th:text="#{detail.back}">Back to tours</span></a>
 
-                <h1 class="h2 mb-4">Your cart</h1>
+                <h1 class="h2 mb-4" th:text="#{cart.title}">Your cart</h1>
 
                 <div th:if="${error}" class="alert alert-danger d-flex align-items-center gap-2">
                     <i class="bi bi-exclamation-circle"></i>
@@ -28,8 +28,8 @@
                 <div th:if="${cart.items.isEmpty()}"
                      class="text-center text-muted border rounded p-5 my-4">
                     <i class="bi bi-cart3 fs-1 d-block mb-3 text-secondary opacity-50"></i>
-                    Your cart is empty.
-                    <a th:href="@{/}" class="text-success fw-semibold text-decoration-none">Browse tours</a>.
+                    <span th:text="#{cart.empty}">Your cart is empty.</span>
+                    <a th:href="@{/}" class="text-success fw-semibold text-decoration-none" th:text="#{common.browseTours}">Browse tours</a>.
                 </div>
 
                 <div th:unless="${cart.items.isEmpty()}" class="card border-0 shadow-sm">
@@ -45,7 +45,8 @@
                                      th:src="@{/images/{name}(name=${item.tour.imageName})}"
                                      th:alt="${item.tour.title}">
                                 <div th:unless="${item.tour.imageName != null}"
-                                     class="d-flex align-items-center justify-content-center bg-body-secondary text-muted small">
+                                     class="d-flex align-items-center justify-content-center bg-body-secondary text-muted small"
+                                     th:text="#{card.noPhoto}">
                                     No photo
                                 </div>
                             </div>
@@ -57,7 +58,7 @@
                                 <div class="text-muted small">
                                     <span class="text-muted">$</span><span
                                         th:text="${#numbers.formatInteger(item.tour.price, 1, 'COMMA')}">1,299</span>
-                                    <span>/ seat</span>
+                                    <span th:text="#{cart.perSeat}">/ seat</span>
                                 </div>
                             </div>
 
@@ -105,7 +106,7 @@
 
                         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 p-3">
                             <span class="fs-5">
-                                Total:
+                                <span th:text="#{common.total}">Total</span>:
                                 <span class="fw-semibold">
                                     <span class="text-muted fs-6">$</span><span
                                         th:text="${#numbers.formatInteger(cart.total, 1, 'COMMA')}">3,897</span>
@@ -114,7 +115,7 @@
                             <form th:action="@{/orders/checkout}" method="post" class="m-0">
                                 <button type="submit"
                                         class="btn btn-success text-uppercase fw-semibold d-inline-flex align-items-center gap-2">
-                                    <i class="bi bi-bag-check"></i>Checkout
+                                    <i class="bi bi-bag-check"></i><span th:text="#{cart.checkout}">Checkout</span>
                                 </button>
                             </form>
                         </div>

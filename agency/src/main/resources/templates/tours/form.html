@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${tourId != null} ? 'Edit tour' : 'New tour'">New tour</title>
+    <title th:text="${tourId != null} ? #{form.editTitle} : #{form.newTitle}">New tour</title>
     <th:block th:replace="~{fragments/head :: assets}"></th:block>
     <style>
         .form-control:focus, .form-select:focus {
@@ -22,12 +22,12 @@
 
                 <a th:href="${tourId != null} ? @{/tours/manage} : @{/}"
                    class="text-uppercase fw-semibold text-success small text-decoration-none mb-4 d-inline-block">&larr;
-                    <span th:text="${tourId != null} ? 'Back to dashboard' : 'Back to tours'">Back to tours</span></a>
+                    <span th:text="${tourId != null} ? #{form.backDashboard} : #{detail.back}">Back to tours</span></a>
 
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4">
 
-                        <h1 class="h3 mb-4" th:text="${tourId != null} ? 'Update the tour' : 'Create a tour'">Create a
+                        <h1 class="h3 mb-4" th:text="${tourId != null} ? #{form.editHeading} : #{form.newHeading}">Create a
                             tour</h1>
 
                         <form th:action="${tourId != null} ? @{/tours/{id}(id=${tourId})} : @{/tours}"
@@ -36,100 +36,112 @@
 
                             <div class="col-12">
                                 <label for="title"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Title</label>
+                                       class="form-label fw-semibold text-success small mb-1" th:text="#{form.title}">Title</label>
                                 <input type="text" th:field="*{title}" class="form-control" id="title"
-                                       placeholder="Title">
+                                       th:errorclass="is-invalid" th:placeholder="#{form.title}" placeholder="Title">
+                                <div class="invalid-feedback" th:errors="*{title}">Title is required</div>
                             </div>
 
                             <div class="col-12">
                                 <label for="description"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Description</label>
+                                       class="form-label fw-semibold text-success small mb-1" th:text="#{form.description}">Description</label>
                                 <textarea th:field="*{description}" class="form-control" id="description" rows="3"
-                                          placeholder="Description"></textarea>
+                                          th:placeholder="#{form.description}" placeholder="Description"></textarea>
                             </div>
 
                             <div class="col-md-6">
                                 <label for="price"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Price</label>
+                                       class="form-label fw-semibold text-success small mb-1" th:text="#{form.price}">Price</label>
                                 <input type="number" th:field="*{price}" class="form-control" id="price" step="0.01"
-                                       min="0" placeholder="0.00">
+                                       min="0" th:errorclass="is-invalid" placeholder="0.00">
+                                <div class="invalid-feedback" th:errors="*{price}">Price is required</div>
                             </div>
                             <div class="col-md-6 d-flex flex-column">
-                                <label for="hot" class="form-label text-uppercase fw-semibold text-success small mb-1">Hot
+                                <label for="hot" class="form-label fw-semibold text-success small mb-1" th:text="#{form.hotDeal}">Hot
                                     deal</label>
                                 <div class="flex-grow-1 d-flex align-items-center">
                                     <input type="checkbox" class="btn-check" name="hot" value="true" id="hot"
                                            autocomplete="off" th:checked="*{hot}">
-                                    <label class="btn btn-outline-success d-inline-flex align-items-center gap-1 text-uppercase fw-semibold"
+                                    <label class="btn btn-outline-success d-inline-flex align-items-center gap-1 fw-semibold"
                                            for="hot">
-                                        <i class="bi bi-fire"></i> Hot
+                                        <i class="bi bi-fire"></i> <span th:text="#{card.hot}">Hot</span>
                                     </label>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <label for="arrivalDate"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Arrival
+                                       class="form-label fw-semibold text-success small mb-1" th:text="#{form.arrivalDate}">Arrival
                                     date</label>
-                                <input type="date" th:field="*{arrivalDate}" class="form-control" id="arrivalDate">
+                                <input type="date" th:field="*{arrivalDate}" class="form-control" id="arrivalDate"
+                                       th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:errors="*{arrivalDate}">Arrival date is required</div>
                             </div>
                             <div class="col-md-6">
                                 <label for="evictionDate"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Eviction
+                                       class="form-label fw-semibold text-success small mb-1" th:text="#{form.evictionDate}">Eviction
                                     date</label>
-                                <input type="date" th:field="*{evictionDate}" class="form-control" id="evictionDate">
+                                <input type="date" th:field="*{evictionDate}" class="form-control" id="evictionDate"
+                                       th:errorclass="is-invalid">
+                                <div class="invalid-feedback" th:errors="*{evictionDate}">Eviction date is required</div>
                             </div>
 
                             <div class="col-md-4">
                                 <label for="tourType"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">
+                                       class="form-label fw-semibold text-success small mb-1" th:text="#{form.tourType}">
                                     Tour type
                                 </label>
-                                <select th:field="*{tourType}" class="form-select" id="tourType">
-                                    <option value="">Select…</option>
+                                <select th:field="*{tourType}" class="form-select" id="tourType"
+                                        th:errorclass="is-invalid">
+                                    <option value="" th:text="#{form.select}">Select…</option>
                                     <option th:each="type : ${tourTypes}" th:value="${type}"
-                                            th:text="${#strings.capitalizeWords(#strings.replace(#strings.toLowerCase(type), '_', ' '))}">
+                                            th:text="#{|enum.tourType.${type}|}">
                                         Leisure
                                     </option>
                                 </select>
+                                <div class="invalid-feedback" th:errors="*{tourType}">Tour type is required</div>
                             </div>
                             <div class="col-md-4">
                                 <label for="hotelType"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Hotel
+                                       class="form-label fw-semibold text-success small mb-1" th:text="#{form.hotelType}">Hotel
                                     type</label>
-                                <select th:field="*{hotelType}" class="form-select" id="hotelType">
-                                    <option value="">Select…</option>
+                                <select th:field="*{hotelType}" class="form-select" id="hotelType"
+                                        th:errorclass="is-invalid">
+                                    <option value="" th:text="#{form.select}">Select…</option>
                                     <option th:each="type : ${hotelTypes}" th:value="${type}"
-                                            th:text="${#strings.capitalizeWords(#strings.replace(#strings.toLowerCase(type), '_', ' '))}">
+                                            th:text="#{|enum.hotelType.${type}|}">
                                         Four Stars
                                     </option>
                                 </select>
+                                <div class="invalid-feedback" th:errors="*{hotelType}">Hotel type is required</div>
                             </div>
                             <div class="col-md-4">
                                 <label for="transferType"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Transfer
+                                       class="form-label fw-semibold text-success small mb-1" th:text="#{form.transferType}">Transfer
                                     type</label>
-                                <select th:field="*{transferType}" class="form-select" id="transferType">
-                                    <option value="">Select…</option>
+                                <select th:field="*{transferType}" class="form-select" id="transferType"
+                                        th:errorclass="is-invalid">
+                                    <option value="" th:text="#{form.select}">Select…</option>
                                     <option th:each="type : ${transferTypes}" th:value="${type}"
-                                            th:text="${#strings.capitalizeWords(#strings.replace(#strings.toLowerCase(type), '_', ' '))}">
+                                            th:text="#{|enum.transferType.${type}|}">
                                         Plane
                                     </option>
                                 </select>
+                                <div class="invalid-feedback" th:errors="*{transferType}">Transfer type is required</div>
                             </div>
 
                             <div class="col-12">
                                 <label for="image"
-                                       class="form-label text-uppercase fw-semibold text-success small mb-1">Image</label>
+                                       class="form-label fw-semibold text-success small mb-1" th:text="#{form.image}">Image</label>
                                 <input type="file" th:field="*{image}" class="form-control" id="image" accept="image/*">
                             </div>
 
                             <div class="col-12 d-flex gap-2 mt-4">
-                                <button type="submit" class="btn btn-success text-uppercase fw-semibold"
-                                        th:text="${tourId != null} ? 'Save changes' : 'Create tour'">Create tour
+                                <button type="submit" class="btn btn-success fw-semibold"
+                                        th:text="${tourId != null} ? #{form.save} : #{form.create}">Create tour
                                 </button>
                                 <a th:href="${tourId != null} ? @{/tours/manage} : @{/}"
-                                   class="btn btn-outline-secondary">Cancel</a>
+                                   class="btn btn-outline-secondary" th:text="#{form.cancel}">Cancel</a>
                             </div>
 
                         </form>

@@ -84,7 +84,8 @@
         <input type="hidden" name="maxPrice"     th:if="${maxPrice != null}"     th:value="${maxPrice}">
         <input type="hidden" name="hot"          th:if="${hot != null}"          th:value="${hot}">
 
-        <label for="size" class="text-uppercase fw-semibold text-success small mb-0">Items per page</label>
+        <label for="size" class=" fw-semibold text-success small mb-0"
+               th:text="#{pagination.perPage}">Items per page</label>
         <select id="size" name="size" class="form-select form-select-sm sort-select w-auto"
                 onchange="this.form.submit()">
             <option value="12" th:selected="${currentSize == '12'}">12</option>

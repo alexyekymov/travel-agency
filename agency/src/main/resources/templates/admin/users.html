@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User management</title>
+    <title th:text="#{admin.title}">User management</title>
     <th:block th:replace="~{fragments/head :: assets}"></th:block>
 </head>
 <body>
@@ -15,10 +15,11 @@
             <div class="col-lg-8">
 
                 <div class="mb-4">
-                    <h1 class="h2 mb-0">User management</h1>
+                    <h1 class="h2 mb-0" th:text="#{admin.title}">User management</h1>
                 </div>
 
-                <div th:if="${users.isEmpty()}" class="text-center text-muted border rounded p-5 my-4">
+                <div th:if="${users.isEmpty()}" class="text-center text-muted border rounded p-5 my-4"
+                     th:text="#{admin.empty}">
                     No users yet.
                 </div>
 
@@ -26,11 +27,11 @@
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead>
-                            <tr class="text-uppercase small text-muted">
-                                <th scope="col" class="ps-3">User</th>
-                                <th scope="col">Roles</th>
-                                <th scope="col" class="text-center">Status</th>
-                                <th scope="col" class="text-end pe-3">Actions</th>
+                            <tr class=" small text-muted">
+                                <th scope="col" class="ps-3" th:text="#{admin.col.user}">User</th>
+                                <th scope="col" th:text="#{admin.col.roles}">Roles</th>
+                                <th scope="col" class="text-center" th:text="#{admin.col.status}">Status</th>
+                                <th scope="col" class="text-end pe-3" th:text="#{admin.col.actions}">Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -51,13 +52,13 @@
                                                    th:id="${'role-' + user.id + '-' + role}"
                                                    autocomplete="off"
                                                    th:checked="${user.roles.contains(role)}">
-                                            <label class="btn btn-sm btn-outline-success text-uppercase fw-semibold"
+                                            <label class="btn btn-sm btn-outline-success  fw-semibold"
                                                    th:for="${'role-' + user.id + '-' + role}"
-                                                   th:text="${#strings.capitalizeWords(#strings.toLowerCase(role))}">Role</label>
+                                                   th:text="#{|enum.role.${role}|}">Role</label>
                                         </th:block>
                                         <button type="submit"
                                                 class="btn btn-sm btn-success d-inline-flex align-items-center gap-1"
-                                                title="Save roles">
+                                                th:title="#{admin.saveRoles}" title="Save roles">
                                             <i class="bi bi-check-lg"></i>
                                         </button>
                                     </form>
@@ -65,11 +66,13 @@
 
                                 <td class="text-center">
                                     <span th:if="${user.active}"
-                                          class="badge rounded-pill bg-success-subtle text-success-emphasis border border-success-subtle text-uppercase fw-semibold">
+                                          class="badge rounded-pill bg-success-subtle text-success-emphasis border border-success-subtle  fw-semibold"
+                                          th:text="#{admin.active}">
                                         Active
                                     </span>
                                     <span th:unless="${user.active}"
-                                          class="badge rounded-pill bg-danger-subtle text-danger-emphasis border border-danger-subtle text-uppercase fw-semibold">
+                                          class="badge rounded-pill bg-danger-subtle text-danger-emphasis border border-danger-subtle  fw-semibold"
+                                          th:text="#{admin.blocked}">
                                         Blocked
                                     </span>
                                 </td>
@@ -79,16 +82,16 @@
                                     <form th:if="${user.active}" th:action="@{/admin/users/{id}/block(id=${user.id})}"
                                           method="post" class="m-0">
                                         <button type="submit" th:disabled="${self}"
-                                                class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1 text-uppercase fw-semibold">
-                                            <i class="bi bi-slash-circle"></i>Block
+                                                class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1  fw-semibold">
+                                            <i class="bi bi-slash-circle"></i><span th:text="#{admin.block}">Block</span>
                                         </button>
                                     </form>
                                     <form th:unless="${user.active}"
                                           th:action="@{/admin/users/{id}/unblock(id=${user.id})}"
                                           method="post" class="m-0">
                                         <button type="submit" th:disabled="${self}"
-                                                class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1 text-uppercase fw-semibold">
-                                            <i class="bi bi-check-circle"></i>Unblock
+                                                class="btn btn-sm btn-outline-success d-inline-flex align-items-center gap-1  fw-semibold">
+                                            <i class="bi bi-check-circle"></i><span th:text="#{admin.unblock}">Unblock</span>
                                         </button>
                                     </form>
                                 </td>
