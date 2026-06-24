@@ -25,7 +25,7 @@
 
                         <h1 class="h3 mb-4" th:text="#{auth.createAccount}">Create your account</h1>
 
-                        <form th:action="@{/auth/sign-up}" th:object="${registerRequest}" method="post"
+                        <form th:action="@{/auth/sign-up}" th:object="${userRequest}" method="post"
                               class="row g-3" novalidate>
 
                             <div class="col-12 col-sm-6">
