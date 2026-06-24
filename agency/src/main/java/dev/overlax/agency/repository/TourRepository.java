@@ -18,14 +18,14 @@ import java.util.UUID;
 public interface TourRepository extends JpaRepository<Tour, UUID> {
 
     @Query("""
-            select t from Tour t
-            where (:tourType is null or t.tourType = :tourType)
-              and (:transferType is null or t.transferType = :transferType)
-              and (:hotelType is null or t.hotelType = :hotelType)
-              and (:minPrice is null or t.price >= :minPrice)
-              and (:maxPrice is null or t.price <= :maxPrice)
-              and (:hot is null or t.hot = :hot)
-            order by t.hot desc, t.createdAt desc
+            SELECT t FROM Tour t
+            WHERE (:tourType IS NULL OR t.tourType = :tourType)
+              AND (:transferType IS NULL OR t.transferType = :transferType)
+              AND (:hotelType IS NULL OR t.hotelType = :hotelType)
+              AND (:minPrice IS NULL OR t.price >= :minPrice)
+              AND (:maxPrice IS NULL OR t.price <= :maxPrice)
+              AND (:hot IS NULL OR t.hot = :hot)
+            ORDER BY t.hot DESC, t.createdAt DESC
             """)
     Page<Tour> filter(@Param("tourType") TourType tourType,
                       @Param("transferType") TransferType transferType,
