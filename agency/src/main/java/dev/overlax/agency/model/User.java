@@ -2,10 +2,14 @@ package dev.overlax.agency.model;
 
 import dev.overlax.agency.model.type.Role;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Generated;
+import org.hibernate.generator.EventType;
 
 import java.time.Instant;
 import java.util.EnumSet;
@@ -16,11 +20,14 @@ import java.util.UUID;
 @Table(name = "app_user")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 public class User {
 
     @Id
     @Column(name = "id")
+    @Generated(event = EventType.INSERT)
     private UUID id;
 
     @Column(name = "first_name")
@@ -38,10 +45,10 @@ public class User {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "role")
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_role")
     @ElementCollection(fetch = FetchType.EAGER)
-    @Column(name = "role")
     private Set<Role> roles = EnumSet.noneOf(Role.class);
 
     @Column(name = "account_status")
