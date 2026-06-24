@@ -1,6 +1,6 @@
 package dev.overlax.agency.service;
 
-import dev.overlax.agency.dto.RegisterRequest;
+import dev.overlax.agency.dto.UserRequest;
 import dev.overlax.agency.dto.UserDTO;
 import dev.overlax.agency.model.type.Role;
 import org.springframework.data.domain.Page;
@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface UserService {
 
-    UserDTO register(RegisterRequest request);
+    UserDTO register(UserRequest request);
 
     UserDTO getUserByEmail(String email);
 

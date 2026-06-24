@@ -1,6 +1,6 @@
 package dev.overlax.agency.controller;
 
-import dev.overlax.agency.dto.RegisterRequest;
+import dev.overlax.agency.dto.UserRequest;
 import dev.overlax.agency.exception.EmailAlreadyExistsException;
 import dev.overlax.agency.service.UserService;
 import jakarta.validation.Valid;
@@ -25,12 +25,12 @@ public class AuthController {
     }
 
     @GetMapping("/sign-up")
-    public String signUpForm(@ModelAttribute("registerRequest") RegisterRequest request) {
+    public String signUpForm(@ModelAttribute("userRequest") UserRequest request) {
         return "auth/sign-up";
     }
 
     @PostMapping("/sign-up")
-    public String signUp(@Valid @ModelAttribute("registerRequest") RegisterRequest request,
+    public String signUp(@Valid @ModelAttribute("userRequest") UserRequest request,
                          BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "auth/sign-up";

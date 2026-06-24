@@ -1,7 +1,7 @@
 package dev.overlax.agency.service;
 
-import dev.overlax.agency.dto.RegisterRequest;
 import dev.overlax.agency.dto.UserDTO;
+import dev.overlax.agency.dto.UserRequest;
 import dev.overlax.agency.exception.EmailAlreadyExistsException;
 import dev.overlax.agency.mapper.UserToDtoMapper;
 import dev.overlax.agency.model.User;
@@ -35,22 +35,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDTO register(RegisterRequest request) {
+    public UserDTO register(UserRequest request) {
         if (repository.existsByEmailIgnoreCase(request.email())) {
             log.warn("Registration rejected, email already in use: {}", request.email());
             throw new EmailAlreadyExistsException(
                     String.format("User with email: %s already exists", request.email()));
         }
 
-        User user = new User();
-        user.setId(UUID.randomUUID());
-        user.setFirstName(request.firstName());
-        user.setLastName(request.lastName());
-        user.setEmail(request.email());
-        user.setPassword(passwordEncoder.encode(request.password()));
-        user.setPhoneNumber(request.phoneNumber());
-        user.setRoles(EnumSet.of(Role.USER));
-        user.setActive(true);
+        User user = User.builder()
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .email(request.email())
+                .password(passwordEncoder.encode(request.password()))
+                .phoneNumber(request.phoneNumber())
+                .roles(EnumSet.of(Role.USER))
+                .active(true)
+                .build();
+
 
         User saved = repository.save(user);
         log.info("New user registered: id={}, email={}", saved.getId(), saved.getEmail());

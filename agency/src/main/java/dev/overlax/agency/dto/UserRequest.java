@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-public record RegisterRequest(
+public record UserRequest(
 
         @NotBlank(message = "{register.firstName.notBlank}")
         String firstName,
