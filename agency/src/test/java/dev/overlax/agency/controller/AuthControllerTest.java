@@ -1,6 +1,6 @@
 package dev.overlax.agency.controller;
 
-import dev.overlax.agency.dto.RegisterRequest;
+import dev.overlax.agency.dto.UserRequest;
 import dev.overlax.agency.exception.EmailAlreadyExistsException;
 import dev.overlax.agency.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +47,7 @@ class AuthControllerTest {
         mockMvc.perform(get("/auth/sign-up"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("auth/sign-up"))
-                .andExpect(model().attributeExists("registerRequest"));
+                .andExpect(model().attributeExists("userRequest"));
     }
 
     @Test
@@ -60,7 +60,7 @@ class AuthControllerTest {
                         .param("phoneNumber", "+380501234567"))
                 .andExpect(redirectedUrl("/auth/sign-in?registered"));
 
-        verify(userService).register(any(RegisterRequest.class));
+        verify(userService).register(any(UserRequest.class));
     }
 
     @Test
@@ -68,14 +68,14 @@ class AuthControllerTest {
         mockMvc.perform(post("/auth/sign-up"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("auth/sign-up"))
-                .andExpect(model().attributeHasErrors("registerRequest"));
+                .andExpect(model().attributeHasErrors("userRequest"));
 
         verify(userService, never()).register(any());
     }
 
     @Test
     void givenTakenEmail_whenPost_thenReturnsFormWithEmailError() throws Exception {
-        when(userService.register(any(RegisterRequest.class)))
+        when(userService.register(any(UserRequest.class)))
                 .thenThrow(new EmailAlreadyExistsException("taken"));
 
         mockMvc.perform(post("/auth/sign-up")
@@ -85,6 +85,6 @@ class AuthControllerTest {
                         .param("password", "Str0ng@Pass"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("auth/sign-up"))
-                .andExpect(model().attributeHasFieldErrors("registerRequest", "email"));
+                .andExpect(model().attributeHasFieldErrors("userRequest", "email"));
     }
 }

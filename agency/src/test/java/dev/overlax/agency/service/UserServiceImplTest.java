@@ -1,6 +1,6 @@
 package dev.overlax.agency.service;
 
-import dev.overlax.agency.dto.RegisterRequest;
+import dev.overlax.agency.dto.UserRequest;
 import dev.overlax.agency.dto.UserDTO;
 import dev.overlax.agency.exception.EmailAlreadyExistsException;
 import dev.overlax.agency.mapper.UserToDtoMapper;
@@ -53,7 +53,7 @@ class UserServiceImplTest {
 
     @Test
     void givenNewEmail_whenRegister_thenEncodesPasswordAssignsUserRoleAndReturnsDto() {
-        RegisterRequest request = new RegisterRequest(
+        UserRequest request = new UserRequest(
                 "Olena", "Shevchenko", "olena@example.com", "Str0ng@Pass", "+380501234567");
         UserDTO expected = new UserDTO(UUID.randomUUID(), "olena@example.com",
                 "Olena", "Shevchenko", Set.of(Role.USER), true);
@@ -80,7 +80,7 @@ class UserServiceImplTest {
 
     @Test
     void givenExistingEmail_whenRegister_thenThrowsAndDoesNotSave() {
-        RegisterRequest request = new RegisterRequest(
+        UserRequest request = new UserRequest(
                 "Ihor", "Tkachenko", "ihor@example.com", "Str0ng@Pass", null);
         when(repository.existsByEmailIgnoreCase("ihor@example.com")).thenReturn(true);
 
