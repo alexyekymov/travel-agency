@@ -26,6 +26,10 @@ spring:
     multipart:
       max-file-size: 10MB
 
+logging:
+  level:
+    dev.overlax.agency.aspect: DEBUG
+
 app:
   upload-dir: ${APP_UPLOAD_DIR:${user.home}/travel-agency-uploads}
   security:
