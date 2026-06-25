@@ -7,21 +7,15 @@ import dev.overlax.agency.mapper.UserToDtoMapper;
 import dev.overlax.agency.model.User;
 import dev.overlax.agency.model.type.Role;
 import dev.overlax.agency.repository.UserRepository;
-import dev.overlax.agency.security.AuthUser;
 import jakarta.persistence.EntityNotFoundException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -45,11 +39,6 @@ class UserServiceImplTest {
 
     @InjectMocks
     private UserServiceImpl service;
-
-    @AfterEach
-    void clearSecurityContext() {
-        SecurityContextHolder.clearContext();
-    }
 
     @Test
     void givenNewEmail_whenRegister_thenEncodesPasswordAssignsUserRoleAndReturnsDto() {
@@ -120,13 +109,13 @@ class UserServiceImplTest {
 
     @Test
     void givenAnotherUser_whenBlockUser_thenDeactivatesAccount() {
-        authenticateAs(UUID.randomUUID());
+        UUID self = UUID.randomUUID();
         UUID targetId = UUID.randomUUID();
         User target = new User();
         target.setActive(true);
         when(repository.findById(targetId)).thenReturn(Optional.of(target));
 
-        service.blockUser(targetId);
+        service.blockUser(self, targetId);
 
         assertThat(target.isActive()).isFalse();
     }
@@ -134,59 +123,90 @@ class UserServiceImplTest {
     @Test
     void givenOwnId_whenBlockUser_thenRejects() {
         UUID adminId = UUID.randomUUID();
-        authenticateAs(adminId);
 
-        assertThatThrownBy(() -> service.blockUser(adminId))
+        assertThatThrownBy(() -> service.blockUser(adminId, adminId))
                 .isInstanceOf(IllegalStateException.class);
 
         verify(repository, never()).findById(any());
     }
 
     @Test
-    void givenBlockedUser_whenUnblockUser_thenReactivatesAccount() {
+    void givenAnotherUser_whenUnblockUser_thenReactivatesAccount() {
+        UUID self = UUID.randomUUID();
         UUID targetId = UUID.randomUUID();
         User target = new User();
         target.setActive(false);
         when(repository.findById(targetId)).thenReturn(Optional.of(target));
 
-        service.unblockUser(targetId);
+        service.unblockUser(self, targetId);
 
         assertThat(target.isActive()).isTrue();
     }
 
     @Test
-    void givenAnotherUser_whenChangeRoles_thenReplacesRoles() {
-        authenticateAs(UUID.randomUUID());
-        UUID targetId = UUID.randomUUID();
-        User target = new User();
-        when(repository.findById(targetId)).thenReturn(Optional.of(target));
-
-        service.changeRoles(targetId, Set.of(Role.MANAGER, Role.ADMIN));
-
-        assertThat(target.getRoles()).containsExactlyInAnyOrder(Role.MANAGER, Role.ADMIN);
-    }
-
-    @Test
-    void givenOwnId_whenChangeRoles_thenRejects() {
+    void givenOwnId_whenUnblockUser_thenRejects() {
         UUID adminId = UUID.randomUUID();
-        authenticateAs(adminId);
 
-        assertThatThrownBy(() -> service.changeRoles(adminId, Set.of(Role.USER)))
+        assertThatThrownBy(() -> service.unblockUser(adminId, adminId))
                 .isInstanceOf(IllegalStateException.class);
 
         verify(repository, never()).findById(any());
     }
 
-    private void authenticateAs(UUID id) {
-        AuthUser principal = AuthUser.builder()
-                .id(id)
-                .email("admin@example.com")
-                .password("x")
-                .enabled(true)
-                .authorities(List.of())
-                .build();
-        SecurityContext context = SecurityContextHolder.createEmptyContext();
-        context.setAuthentication(new UsernamePasswordAuthenticationToken(principal, null, List.of()));
-        SecurityContextHolder.setContext(context);
+    @Test
+    void givenManagerRole_whenChangeRole_thenAlsoStoresUser() {
+        UUID self = UUID.randomUUID();
+        UUID targetId = UUID.randomUUID();
+        User target = new User();
+        when(repository.findById(targetId)).thenReturn(Optional.of(target));
+
+        service.changeRole(self, targetId, Role.MANAGER);
+
+        assertThat(target.getRoles()).containsExactlyInAnyOrder(Role.MANAGER, Role.USER);
+    }
+
+    @Test
+    void givenAdminRole_whenChangeRole_thenStoresFullHierarchy() {
+        UUID self = UUID.randomUUID();
+        UUID targetId = UUID.randomUUID();
+        User target = new User();
+        when(repository.findById(targetId)).thenReturn(Optional.of(target));
+
+        service.changeRole(self, targetId, Role.ADMIN);
+
+        assertThat(target.getRoles()).containsExactlyInAnyOrder(Role.ADMIN, Role.MANAGER, Role.USER);
+    }
+
+    @Test
+    void givenUserRole_whenChangeRole_thenStoresOnlyUser() {
+        UUID self = UUID.randomUUID();
+        UUID targetId = UUID.randomUUID();
+        User target = new User();
+        when(repository.findById(targetId)).thenReturn(Optional.of(target));
+
+        service.changeRole(self, targetId, Role.USER);
+
+        assertThat(target.getRoles()).containsExactly(Role.USER);
+    }
+
+    @Test
+    void givenNullRole_whenChangeRole_thenRejects() {
+        UUID self = UUID.randomUUID();
+        UUID targetId = UUID.randomUUID();
+
+        assertThatThrownBy(() -> service.changeRole(self, targetId, null))
+                .isInstanceOf(IllegalStateException.class);
+
+        verify(repository, never()).findById(any());
+    }
+
+    @Test
+    void givenOwnId_whenChangeRole_thenRejects() {
+        UUID adminId = UUID.randomUUID();
+
+        assertThatThrownBy(() -> service.changeRole(adminId, adminId, Role.USER))
+                .isInstanceOf(IllegalStateException.class);
+
+        verify(repository, never()).findById(any());
     }
 }

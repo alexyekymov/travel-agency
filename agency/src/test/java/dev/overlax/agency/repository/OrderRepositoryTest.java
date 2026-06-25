@@ -26,7 +26,6 @@ class OrderRepositoryTest {
 
         assertThat(orders).hasSize(2);
 
-        // newest (2026-02-05, total 200) before older (2026-02-01, total 100)
         assertThat(orders.get(0).getTotalPrice()).isEqualByComparingTo("200.00");
         assertThat(orders.get(1).getTotalPrice()).isEqualByComparingTo("100.00");
         assertThat(orders).extracting(o -> o.getUser().getId()).containsOnly(ANN);

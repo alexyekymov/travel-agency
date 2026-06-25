@@ -1,7 +1,9 @@
 package dev.overlax.agency.controller;
 
 import dev.overlax.agency.model.type.Role;
+import dev.overlax.agency.security.AuthUser;
 import dev.overlax.agency.service.UserService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,13 +11,18 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,12 +39,32 @@ class AdminControllerTest {
     private UserService userService;
 
     private MockMvc mockMvc;
+    private UUID adminId;
 
     @BeforeEach
     void setUp() {
         mockMvc = MockMvcBuilders.standaloneSetup(new AdminController(userService))
-                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .setCustomArgumentResolvers(
+                        new PageableHandlerMethodArgumentResolver(),
+                        new AuthenticationPrincipalArgumentResolver())
                 .build();
+
+        adminId = UUID.randomUUID();
+        AuthUser principal = AuthUser.builder()
+                .id(adminId)
+                .email("admin@example.com")
+                .password("x")
+                .enabled(true)
+                .authorities(List.of())
+                .build();
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(new UsernamePasswordAuthenticationToken(principal, null, List.of()));
+        SecurityContextHolder.setContext(context);
+    }
+
+    @AfterEach
+    void clearSecurityContext() {
+        SecurityContextHolder.clearContext();
     }
 
     @Test
@@ -57,7 +84,7 @@ class AdminControllerTest {
         mockMvc.perform(post("/admin/users/{id}/block", id))
                 .andExpect(redirectedUrl("/admin/users"));
 
-        verify(userService).blockUser(id);
+        verify(userService).blockUser(adminId, id);
     }
 
     @Test
@@ -67,27 +94,27 @@ class AdminControllerTest {
         mockMvc.perform(post("/admin/users/{id}/unblock", id))
                 .andExpect(redirectedUrl("/admin/users"));
 
-        verify(userService).unblockUser(id);
+        verify(userService).unblockUser(adminId, id);
     }
 
     @Test
-    void givenRoles_whenChangeRoles_thenUpdatesRolesAndRedirects() throws Exception {
+    void givenRole_whenChangeRoles_thenUpdatesRoleAndRedirects() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mockMvc.perform(post("/admin/users/{id}/roles", id)
-                        .param("roles", "ADMIN", "MANAGER"))
+        mockMvc.perform(post("/admin/users/{id}/role", id)
+                        .param("role", "ADMIN"))
                 .andExpect(redirectedUrl("/admin/users"));
 
-        verify(userService).changeRoles(id, Set.of(Role.ADMIN, Role.MANAGER));
+        verify(userService).changeRole(adminId, id, Role.ADMIN);
     }
 
     @Test
-    void givenNoRoles_whenChangeRoles_thenPassesEmptySet() throws Exception {
+    void givenNoRole_whenChangeRoles_thenBadRequestAndServiceNotCalled() throws Exception {
         UUID id = UUID.randomUUID();
 
-        mockMvc.perform(post("/admin/users/{id}/roles", id))
-                .andExpect(redirectedUrl("/admin/users"));
+        mockMvc.perform(post("/admin/users/{id}/role", id))
+                .andExpect(status().isBadRequest());
 
-        verify(userService).changeRoles(id, Set.of());
+        verify(userService, never()).changeRole(any(), any(), any());
     }
 }
