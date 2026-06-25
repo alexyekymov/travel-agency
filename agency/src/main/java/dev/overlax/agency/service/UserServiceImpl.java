@@ -7,14 +7,12 @@ import dev.overlax.agency.mapper.UserToDtoMapper;
 import dev.overlax.agency.model.User;
 import dev.overlax.agency.model.type.Role;
 import dev.overlax.agency.repository.UserRepository;
-import dev.overlax.agency.security.AuthUser;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,20 +65,6 @@ public class UserServiceImpl implements UserService {
                         () -> new EntityNotFoundException(String.format("User with username: %s not found", email)));
     }
 
-//    @Override
-//    @Transactional
-//    public UserDTO changeAccountStatus(UserDTO userDTO) {
-//        User dummy = mapper.toUser(userDTO);
-//        return repository.findById(dummy.getId())
-//                .map(found -> {
-//                    found.setActive(dummy.isActive());
-//                    repository.save(found);
-//                    return mapper.toUserDTO(found);
-//                }).orElseThrow(
-//                        () -> new EntityNotFoundException(String.format("User with id: %s not found", dummy.getId())));
-//
-//    }
-
     @Override
     public UserDTO getById(UUID id) {
         return repository.findById(id)
@@ -97,37 +81,53 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public void blockUser(UUID id) {
-        if (id.equals(currentUserId())) {
-            log.warn("Self-block attempt rejected for user {}", id);
+    public void blockUser(UUID self, UUID target) {
+        if (self.equals(target)) {
+            log.warn("Self-block attempt rejected for user {}", self);
             throw new IllegalStateException("You cannot block your own account");
         }
-        find(id).setActive(false);
-        log.info("User blocked: {}", id);
+        find(target).setActive(false);
+        log.info("User blocked: {}", target);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public void unblockUser(UUID id) {
-        find(id).setActive(true);
-        log.info("User unblocked: {}", id);
+    public void unblockUser(UUID self, UUID target) {
+        if (self.equals(target)) {
+            log.warn("Self-unblock attempt rejected for user {}", self);
+            throw new IllegalStateException("You cannot unblock your own account");
+        }
+        find(target).setActive(true);
+        log.info("User unblocked: {}", target);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasRole('ADMIN')")
-    public void changeRoles(UUID id, Set<Role> roles) {
-        if (id.equals(currentUserId())) {
-            log.warn("Self role-change attempt rejected for user {}", id);
+    public void changeRole(UUID self, UUID target, Role role) {
+        if (self.equals(target)) {
+            log.warn("Self role-change attempt rejected for user {}", self);
             throw new IllegalStateException("You cannot change your own roles");
         }
-        find(id).setRoles(roles.isEmpty() ? EnumSet.noneOf(Role.class) : EnumSet.copyOf(roles));
-        log.info("Roles changed for user {}: {}", id, roles);
+        if (role == null) {
+            log.warn("Empty role-change attempt rejected for user {}", target);
+            throw new IllegalStateException("A user must have at least one role");
+        }
+        Set<Role> roles = withHierarchy(role);
+        find(target).setRoles(roles);
+        log.info("Roles changed for user {}: {}", target, roles);
     }
 
-    private UUID currentUserId() {
-        return ((AuthUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getId();
+    private static Set<Role> withHierarchy(Role role) {
+        EnumSet<Role> result = EnumSet.of(role);
+        if (result.contains(Role.ADMIN)) {
+            result.add(Role.MANAGER);
+        }
+        if (result.contains(Role.MANAGER)) {
+            result.add(Role.USER);
+        }
+        return result;
     }
 
     private User find(UUID id) {

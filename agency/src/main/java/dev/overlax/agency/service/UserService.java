@@ -19,9 +19,9 @@ public interface UserService {
 
     Page<UserDTO> getAllUsers(Pageable pageable);
 
-    void blockUser(UUID id);
+    void blockUser(UUID self, UUID id);
 
-    void unblockUser(UUID id);
+    void unblockUser(UUID self, UUID id);
 
-    void changeRoles(UUID id, Set<Role> roles);
+    void changeRole(UUID self, UUID target, Role role);
 }
