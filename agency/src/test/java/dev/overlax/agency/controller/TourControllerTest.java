@@ -2,6 +2,9 @@ package dev.overlax.agency.controller;
 
 import dev.overlax.agency.dto.TourRequest;
 import dev.overlax.agency.dto.TourResponse;
+import dev.overlax.agency.model.type.HotelType;
+import dev.overlax.agency.model.type.TourType;
+import dev.overlax.agency.model.type.TransferType;
 import dev.overlax.agency.service.impl.TourService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +16,8 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -134,5 +139,43 @@ class TourControllerTest {
                 .andExpect(redirectedUrl("/tours/manage"));
 
         verify(tourService).delete(id);
+    }
+
+    @Test
+    void givenRequest_whenDashboard_thenRendersManagerDashboardWithTours() throws Exception {
+        when(tourService.findAll(any(), any())).thenReturn(Page.empty());
+
+        mockMvc.perform(get("/tours/manage"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("manager/dashboard"))
+                .andExpect(model().attributeExists("tours"));
+    }
+
+    @Test
+    void givenTourId_whenEditForm_thenRendersFormWithTourRequestAndId() throws Exception {
+        UUID id = UUID.randomUUID();
+        TourRequest existing = new TourRequest("Carpathian Retreat", "Mountain cabins and pine air",
+                new BigDecimal("1200.00"), LocalDate.of(2026, 7, 1), LocalDate.of(2026, 7, 10),
+                TourType.LEISURE, HotelType.FOUR_STARS, TransferType.BUS, false, null);
+        when(tourService.getForEdit(id)).thenReturn(existing);
+
+        mockMvc.perform(get("/tours/{id}/edit", id))
+                .andExpect(status().isOk())
+                .andExpect(view().name("tours/form"))
+                .andExpect(model().attributeExists("tourRequest"))
+                .andExpect(model().attribute("tourId", id));
+    }
+
+    @Test
+    void givenInvalidTour_whenUpdate_thenReturnsFormWithIdAndDoesNotUpdate() throws Exception {
+        UUID id = UUID.randomUUID();
+
+        mockMvc.perform(post("/tours/{id}", id)
+                        .param("price", "1200.00"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("tours/form"))
+                .andExpect(model().attribute("tourId", id));
+
+        verify(tourService, never()).update(any(), any());
     }
 }
