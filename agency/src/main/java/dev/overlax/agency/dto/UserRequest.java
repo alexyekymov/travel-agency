@@ -1,9 +1,9 @@
 package dev.overlax.agency.dto;
 
 import dev.overlax.agency.validation.ValidPassword;
+import dev.overlax.agency.validation.ValidPhoneNumber;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 
 public record UserRequest(
 
@@ -21,7 +21,7 @@ public record UserRequest(
         @ValidPassword(message = "{register.password.invalid}")
         String password,
 
-        @Pattern(regexp = "^$|^\\+?[0-9 ()\\-]{7,20}$", message = "{register.phoneNumber.invalid}")
+        @ValidPhoneNumber(message = "{register.phoneNumber.invalid}")
         String phoneNumber
 ) {
 }
