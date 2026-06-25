@@ -19,7 +19,8 @@ public interface TourRepository extends JpaRepository<Tour, UUID> {
 
     @Query("""
             SELECT t FROM Tour t
-            WHERE (:tourType IS NULL OR t.tourType = :tourType)
+            WHERE (:title IS NULL OR LOWER(t.title) LIKE LOWER(CONCAT('%', CAST(:title AS string), '%')))
+              AND (:tourType IS NULL OR t.tourType = :tourType)
               AND (:transferType IS NULL OR t.transferType = :transferType)
               AND (:hotelType IS NULL OR t.hotelType = :hotelType)
               AND (:minPrice IS NULL OR t.price >= :minPrice)
@@ -27,7 +28,8 @@ public interface TourRepository extends JpaRepository<Tour, UUID> {
               AND (:hot IS NULL OR t.hot = :hot)
             ORDER BY t.hot DESC, t.createdAt DESC
             """)
-    Page<Tour> filter(@Param("tourType") TourType tourType,
+    Page<Tour> filter(@Param("title") String title,
+                      @Param("tourType") TourType tourType,
                       @Param("transferType") TransferType transferType,
                       @Param("hotelType") HotelType hotelType,
                       @Param("minPrice") BigDecimal minPrice,

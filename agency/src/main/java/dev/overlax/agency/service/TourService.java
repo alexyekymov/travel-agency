@@ -27,7 +27,10 @@ public class TourService {
     private final ImageStorageService imageStorageService;
 
     public Page<TourResponse> findAll(TourFilterRequest filter, Pageable pageable) {
+        String title = filter.title() != null ? filter.title().trim() : null;
+
         Page<Tour> tours = tourRepository.filter(
+                title,
                 filter.tourType(),
                 filter.transferType(),
                 filter.hotelType(),
@@ -96,5 +99,4 @@ public class TourService {
         tourRepository.deleteById(id);
         log.info("Tour deleted: {}", id);
     }
-
 }
