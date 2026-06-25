@@ -169,13 +169,13 @@ class TourServiceTest {
 
     @Test
     void givenFilter_whenFindAll_thenMapsPage() {
-        TourFilterRequest filter = new TourFilterRequest(null, null, null, null, null, null);
+        TourFilterRequest filter = new TourFilterRequest(null, null, null, null, null, null, null);
         PageRequest pageable = PageRequest.of(0, 10);
         Tour tour = new Tour();
         TourResponse response = mock(TourResponse.class);
         Page<Tour> page = new PageImpl<>(List.of(tour));
 
-        when(tourRepository.filter(null, null, null, null, null, null, pageable)).thenReturn(page);
+        when(tourRepository.filter(null, null, null, null, null, null, null, pageable)).thenReturn(page);
         when(tourResponseMapper.toDto(tour)).thenReturn(response);
 
         Page<TourResponse> result = service.findAll(filter, pageable);

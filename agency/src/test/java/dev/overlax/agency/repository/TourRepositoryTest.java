@@ -25,7 +25,7 @@ class TourRepositoryTest {
 
     @Test
     void givenNoCriteria_whenFilter_thenReturnsAllOrderedByHotThenCreatedDesc() {
-        Page<Tour> result = tourRepository.filter(null, null, null, null, null, null, PAGE);
+        Page<Tour> result = tourRepository.filter(null, null, null, null, null, null, null, PAGE);
 
         assertThat(result.getTotalElements()).isEqualTo(4);
 
@@ -36,7 +36,7 @@ class TourRepositoryTest {
 
     @Test
     void givenTourType_whenFilter_thenReturnsMatchingTours() {
-        Page<Tour> result = tourRepository.filter(TourType.LEISURE, null, null, null, null, null, PAGE);
+        Page<Tour> result = tourRepository.filter(null, TourType.LEISURE, null, null, null, null, null, PAGE);
 
         assertThat(result.getContent())
                 .extracting(Tour::getTitle)
@@ -45,7 +45,7 @@ class TourRepositoryTest {
 
     @Test
     void givenTransferType_whenFilter_thenReturnsMatchingTours() {
-        Page<Tour> result = tourRepository.filter(null, TransferType.BUS, null, null, null, null, PAGE);
+        Page<Tour> result = tourRepository.filter(null, null, TransferType.BUS, null, null, null, null, PAGE);
 
         assertThat(result.getContent())
                 .extracting(Tour::getTitle)
@@ -54,7 +54,7 @@ class TourRepositoryTest {
 
     @Test
     void givenPriceRange_whenFilter_thenReturnsToursInRange() {
-        Page<Tour> result = tourRepository.filter(null, null, null,
+        Page<Tour> result = tourRepository.filter(null, null, null, null,
                 new BigDecimal("1000"), new BigDecimal("1500"), null, PAGE);
 
         assertThat(result.getContent())
@@ -64,7 +64,7 @@ class TourRepositoryTest {
 
     @Test
     void givenHotFlag_whenFilter_thenReturnsHotToursOrdered() {
-        Page<Tour> result = tourRepository.filter(null, null, null, null, null, true, PAGE);
+        Page<Tour> result = tourRepository.filter(null, null, null, null, null, null, true, PAGE);
 
         assertThat(result.getContent())
                 .extracting(Tour::getTitle)
@@ -73,8 +73,17 @@ class TourRepositoryTest {
 
     @Test
     void givenMultipleCriteria_whenFilter_thenReturnsToursMatchingAll() {
-        Page<Tour> result = tourRepository.filter(TourType.LEISURE, null, null,
+        Page<Tour> result = tourRepository.filter(null, TourType.LEISURE, null, null,
                 null, new BigDecimal("1200"), null, PAGE);
+
+        assertThat(result.getContent())
+                .extracting(Tour::getTitle)
+                .containsExactly("Paris City Break");
+    }
+
+    @Test
+    void givenSearchTitle_whenFilter_thenReturnsMatchingToursCaseInsensitive() {
+        Page<Tour> result = tourRepository.filter("par", null, null, null, null, null, null, PAGE);
 
         assertThat(result.getContent())
                 .extracting(Tour::getTitle)
