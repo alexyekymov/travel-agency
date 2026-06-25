@@ -43,24 +43,19 @@
                                     <div class="text-muted small" th:text="${user.email}">jane@example.com</div>
                                 </td>
 
-                                <td>
-                                    <form th:action="@{/admin/users/{id}/roles(id=${user.id})}" method="post"
-                                          class="d-flex flex-wrap align-items-center gap-2 m-0">
-                                        <th:block th:each="role : ${allRoles}">
-                                            <input type="checkbox" class="btn-check" name="roles"
-                                                   th:value="${role}"
-                                                   th:id="${'role-' + user.id + '-' + role}"
-                                                   autocomplete="off"
-                                                   th:checked="${user.roles.contains(role)}">
-                                            <label class="btn btn-sm btn-outline-success  fw-semibold"
-                                                   th:for="${'role-' + user.id + '-' + role}"
-                                                   th:text="#{|enum.role.${role}|}">Role</label>
-                                        </th:block>
-                                        <button type="submit"
-                                                class="btn btn-sm btn-success d-inline-flex align-items-center gap-1"
-                                                th:title="#{admin.saveRoles}" title="Save roles">
-                                            <i class="bi bi-check-lg"></i>
-                                        </button>
+                                <td th:with="self=${user.id == #authentication.principal.id},
+                                            currRole=${#lists.isEmpty(user.roles) ? null : #lists.toList(user.roles)[0]}">
+                                    <form th:action="@{/admin/users/{id}/role(id=${user.id})}" method="post" class="m-0">
+                                        <select name="role" th:disabled="${self}"
+                                                class="form-select form-select-sm w-auto"
+                                                onchange="this.form.submit()">
+                                            <option selected disabled
+                                                    th:text="${currRole != null} ? #{|enum.role.${currRole}|} : #{form.select}">Role</option>
+                                            <option th:each="role : ${allRoles}"
+                                                    th:if="${role != currRole}"
+                                                    th:value="${role}"
+                                                    th:text="#{|enum.role.${role}|}">Role</option>
+                                        </select>
                                     </form>
                                 </td>
 
