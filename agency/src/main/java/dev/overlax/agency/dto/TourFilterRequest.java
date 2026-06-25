@@ -7,13 +7,14 @@ import jakarta.validation.constraints.PositiveOrZero;
 
 import java.math.BigDecimal;
 
-public record TourFilterRequest(String title,
-                                TourType tourType,
-                                TransferType transferType,
-                                HotelType hotelType,
-                                @PositiveOrZero(message = "{tourFilter.minPrice.positive}")
-                                BigDecimal minPrice,
-                                @PositiveOrZero(message = "{tourFilter.maxPrice.positive}")
-                                BigDecimal maxPrice,
-                                Boolean hot) {
+public record TourFilterRequest(
+        String title,
+        TourType tourType,
+        TransferType transferType,
+        HotelType hotelType,
+        @PositiveOrZero(message = "{tourFilter.minPrice.positive}")
+        BigDecimal minPrice,
+        @PositiveOrZero(message = "{tourFilter.maxPrice.positive}")
+        BigDecimal maxPrice,
+        Boolean hot) {
 }
