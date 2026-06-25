@@ -7,6 +7,7 @@ import dev.overlax.agency.mapper.UserToDtoMapper;
 import dev.overlax.agency.model.User;
 import dev.overlax.agency.model.type.Role;
 import dev.overlax.agency.repository.UserRepository;
+import dev.overlax.agency.service.impl.UserServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

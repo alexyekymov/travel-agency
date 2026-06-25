@@ -5,7 +5,7 @@ import dev.overlax.agency.model.CartItem;
 import dev.overlax.agency.model.Tour;
 import dev.overlax.agency.repository.CartRepository;
 import dev.overlax.agency.repository.TourRepository;
-import dev.overlax.agency.repository.UserRepository;
+import dev.overlax.agency.service.impl.CartServiceImpl;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,17 +21,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class CartServiceTest {
+class CartServiceImplTest {
 
     @Mock
     private CartRepository cartRepository;
     @Mock
     private TourRepository tourRepository;
-    @Mock
-    private UserRepository userRepository;
 
     @InjectMocks
-    private CartService service;
+    private CartServiceImpl service;
 
     private CartItem itemFor(UUID tourId, int seats) {
         Tour tour = new Tour();

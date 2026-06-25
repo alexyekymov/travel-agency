@@ -2,7 +2,7 @@ package dev.overlax.agency.controller;
 
 import dev.overlax.agency.dto.TourRequest;
 import dev.overlax.agency.dto.TourResponse;
-import dev.overlax.agency.service.TourService;
+import dev.overlax.agency.service.impl.TourService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

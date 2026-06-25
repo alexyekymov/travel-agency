@@ -9,6 +9,7 @@ import dev.overlax.agency.model.type.HotelType;
 import dev.overlax.agency.model.type.TourType;
 import dev.overlax.agency.model.type.TransferType;
 import dev.overlax.agency.repository.TourRepository;
+import dev.overlax.agency.service.impl.TourService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

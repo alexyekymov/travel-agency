@@ -9,6 +9,7 @@ import dev.overlax.agency.model.type.OrderStatus;
 import dev.overlax.agency.repository.CartRepository;
 import dev.overlax.agency.repository.OrderRepository;
 import dev.overlax.agency.repository.UserRepository;
+import dev.overlax.agency.service.impl.OrderServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class OrderServiceTest {
+class OrderServiceImplTest {
 
     @Mock
     private OrderRepository orderRepository;
@@ -38,7 +39,7 @@ class OrderServiceTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private OrderService service;
+    private OrderServiceImpl service;
 
     private CartItem cartItem(String price, int seats) {
         Tour tour = new Tour();
