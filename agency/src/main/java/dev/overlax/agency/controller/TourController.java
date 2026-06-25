@@ -6,7 +6,7 @@ import dev.overlax.agency.dto.TourResponse;
 import dev.overlax.agency.model.type.HotelType;
 import dev.overlax.agency.model.type.TourType;
 import dev.overlax.agency.model.type.TransferType;
-import dev.overlax.agency.service.TourService;
+import dev.overlax.agency.service.impl.TourService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

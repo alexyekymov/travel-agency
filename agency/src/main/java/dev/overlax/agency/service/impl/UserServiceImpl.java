@@ -1,4 +1,4 @@
-package dev.overlax.agency.service;
+package dev.overlax.agency.service.impl;
 
 import dev.overlax.agency.dto.UserDTO;
 import dev.overlax.agency.dto.UserRequest;
@@ -7,6 +7,7 @@ import dev.overlax.agency.mapper.UserToDtoMapper;
 import dev.overlax.agency.model.User;
 import dev.overlax.agency.model.type.Role;
 import dev.overlax.agency.repository.UserRepository;
+import dev.overlax.agency.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,5 +1,6 @@
-package dev.overlax.agency.service;
+package dev.overlax.agency.service.impl;
 
+import dev.overlax.agency.service.VoucherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -1,4 +1,4 @@
-package dev.overlax.agency.service;
+package dev.overlax.agency.service.impl;
 
 import dev.overlax.agency.dto.TourFilterRequest;
 import dev.overlax.agency.dto.TourRequest;
@@ -6,6 +6,7 @@ import dev.overlax.agency.dto.TourResponse;
 import dev.overlax.agency.mapper.TourResponseMapper;
 import dev.overlax.agency.model.Tour;
 import dev.overlax.agency.repository.TourRepository;
+import dev.overlax.agency.service.ImageStorageService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
